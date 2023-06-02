@@ -2,6 +2,7 @@ import React from 'react';
 import '../index.css';
 import ListaChats from './ListaChats';
 import fondo from '../assets/fondo-hasbulla.png'
+import ChatAbierto from './ChatAbierto';
 
 export default function WordspaceComp() {
   return (
@@ -11,6 +12,7 @@ export default function WordspaceComp() {
         <ListaChats/>
       </section>
       <section id="chat-abierto" className="bg-gray-900 lg:w-3/4 w-full" style={{ backgroundImage: `url(${fondo})` }}>
+        <ChatAbierto/>
       </section>
     </div>
     </>
