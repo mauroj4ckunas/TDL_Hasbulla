@@ -5,7 +5,7 @@ import RepositorioMensajes from './RepositorioMensajes';
 
 export default function ChatAbierto(){
     return(
-        <div className='h-full w-full relative'>
+        <div className='h-screen w-full relative flex flex-col'>
             <NombreDeChat/>
             <RepositorioMensajes/>
             <InputMensaje/>

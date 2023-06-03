@@ -4,7 +4,7 @@ import { faShare } from '@fortawesome/free-solid-svg-icons'
 
 export default function InputMensaje(){
     return(
-        <div className="absolute bottom-0 w-full flex justify-center">  
+        <div className="mt-auto flex w-full justify-center">  
             <input type="text" placeholder="Escriba un mensaje"
                 className="my-5 px-4 py-3 w-2/3 rounded-full
                 bg-gray-900 text-white">

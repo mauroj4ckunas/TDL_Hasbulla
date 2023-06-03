@@ -5,8 +5,10 @@ import TituloChats from "./TituloChats"
 export default function ListaChats(){
     return(
         <>  
-            <TituloChats/>
-            <Chat/>
+            <div className="h-screen">
+                <TituloChats/>
+                <Chat/>
+            </div> 
         </>
     );
 }

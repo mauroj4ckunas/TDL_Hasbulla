@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.scroll_chat::-webkit-scrollbar{
+    width: 1px;
+}
