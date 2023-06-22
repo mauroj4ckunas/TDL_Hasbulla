@@ -3,7 +3,7 @@ import '../index.css';
 import fondo from '../assets/fondo-hasbulla.png'
 import ChatAbierto from './ChatAbierto';
 import {db} from '../firebase'
-import { addDoc, collection } from 'firebase/firestore/lite';
+import { addDoc, collection, doc, getDoc, getDocs, query, setDoc, where } from 'firebase/firestore/lite';
 import TituloChats from './TituloChats';
 import ContactoChat from './ContactoChat';
 
@@ -38,7 +38,35 @@ export default function WordspaceComp() {
 
   const mandarYRecibirMensajes = async (msj: Mensaje) => {
     const mensajesCol = collection(db, 'mensajeTest');
-    await addDoc(mensajesCol, msj);
+    const mensajesDoc = doc(db, 'mensajeTest', '2')
+    const userCol = collection(mensajesDoc, 'usuariosTest');
+    const nuevoDocumentoRef = doc(userCol, '4');
+
+    // const msjDoc = await getDoc(doc(collection(db, 'mensajeTest')));
+    // const msjDoc = await getDoc(doc(db, "mensajeTest", '2'))
+    // console.log(msjDoc.data());
+
+    // const q = query(collection(db, "mensajeTest"), where("fechaDeEnvio", "==", "21/6/2023"));
+    // const querySnapshot = await getDocs(q);
+    // console.log(querySnapshot)
+    // querySnapshot.forEach((doc) => {
+    //   // doc.data() is never undefined for query doc snapshots
+    //   console.log(doc.id, " => ", doc.data());
+    // });
+
+    await addDoc(userCol, {
+      nombre: 'Gerson',
+      username: 'quepelota2',
+    });
+    await setDoc(nuevoDocumentoRef, msj);
+
+    const querySnapshot = await getDocs(collection(db, "mensajeTest", "2", "usuariosTest"));
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      console.log(doc.id, " => ", doc.data());
+    });
+    // doc(db, 'mensajeTest', "Mensaje con SubCollection", 'usuariosTest', 'usuario1')
+    // await setDoc(doc(db, 'mensajeTest', "Mensaje con SubCollection"), msj)
   }
 
   const abrirChat = () => {
