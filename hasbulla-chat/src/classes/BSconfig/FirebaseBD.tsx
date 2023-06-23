@@ -1,9 +1,11 @@
-import { Firestore, collection, doc, getDoc, getFirestore, setDoc } from "firebase/firestore/lite";
+import { Firestore, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore/lite";
 import { BD } from "./BD";
 import { initializeApp } from "firebase/app";
 import { Usuarios } from "../Usuarios";
+import { Chats } from "../Chats";
+import { Mensajes } from "../Mensajes";
 
-class FirebaseBD implements BD {
+export class FirebaseBD implements BD {
     readonly config = {
         apiKey: "AIzaSyCzGZ0-owUYWeUdFbfNCLBNQydJfbg6Vyk",
         authDomain: "hasbulla-aa6d6.firebaseapp.com",
@@ -17,29 +19,122 @@ class FirebaseBD implements BD {
     private app = initializeApp(this.config, "HasbullApp");
     private db: Firestore = getFirestore(this.app);
     private userCollection = collection(this.db, 'Usuarios');
-    private msjCollection = collection(this.db, 'Mensajes');
     private chatCollection = collection(this.db, 'Chats');
 
-
-    public async VerSiUsuarioExiste(username: string): Promise<boolean> {
+    public async VerSiUsuarioExisteEnBD(username: string): Promise<boolean> {
         const userRef = doc(this.db, "Usuarios", username);
         const userSnap = await getDoc(userRef);
         return userSnap.exists();
     }
 
-    public async CrearUsuario(username: string, nombre: string): Promise<Usuarios | null>  {
-        const existe: boolean = await this.VerSiUsuarioExiste(username);
+    public async CrearUsuario(nuevoUsuario: Usuarios): Promise<boolean>  {
+        const existe: boolean = await this.VerSiUsuarioExisteEnBD(nuevoUsuario.username);
         if (existe) {
             alert("El usuario ingresado ya existe, intente con otro");
-            return null;
         } else {
-            const nuevoUsuario: Usuarios = {
-                username: username,
-                nombre: nombre,
-            }
-            await setDoc(doc(this.db, 'Usuarios', username), nuevoUsuario);
-            return nuevoUsuario;
+            await setDoc(doc(this.db, 'Usuarios', nuevoUsuario.username), nuevoUsuario);
         }
+        return existe;
     }
 
+    public async ObtenerUsuario(username: string): Promise<Usuarios | null> {
+        const userRef = doc(this.userCollection, username);
+        const info = await getDoc(userRef);
+        if (info.exists()) {
+            return {
+                username: info.data().username,
+                nombre: info.data().nombre,
+                contrasena: info.data().contrasena,
+            }
+        }
+        return null;
+    }
+
+    public async CrearChat(idChat: number, usuarioLogueado: string, usuarioParticipe: string): Promise<void> {
+        const docNuevoChat = doc(this.chatCollection, idChat.toString());
+        await setDoc(docNuevoChat, {
+            idChat: idChat,
+            usuarioLogueado: usuarioLogueado,
+            usuarioParticipe: usuarioParticipe,
+        })
+    }
+
+    public async GuardarMensaje(idChat: number, mensaje: Mensajes): Promise<void> {
+        const docChat = doc(this.chatCollection, idChat.toString());
+        const mensajesCollection = collection(docChat, 'Mensajes');
+        const mensajesDoc = doc(mensajesCollection, mensaje.idMensaje.toString());
+        await setDoc(mensajesDoc, {
+            idMensaje: mensaje.idMensaje,
+            texto: mensaje.texto,
+            usuarioEmisor: mensaje.usuarioEmisor,
+            usuarioReceptor: mensaje.usuarioReceptor,
+            fechaDeEnvio: mensaje.fechaDeEnvio,
+        })
+    }
+
+    private async buscarLosChatsDelUsuario(userName: string): Promise<Chats[]> {
+        let chats: Chats[] = [];
+        const query1 = query(this.chatCollection, where("usuarioParticipante1", "==", userName));
+        const querySnapshot1 = await getDocs(query1);
+        querySnapshot1.forEach((chat) => {
+            chats.push({
+                idChat: chat.data().idChat,
+                usuarioParticipante1: chat.data().usuarioParticipante1,
+                usuarioParticipante2: chat.data().usuarioParticipante2,
+            })
+        });
+
+        const query2 = query(this.chatCollection, where("usuarioParticipante2", "==", userName));
+        const querySnapshot2 = await getDocs(query2);
+        querySnapshot2.forEach((chat) => {
+            chats.push({
+                idChat: chat.data().idChat,
+                usuarioParticipante1: chat.data().usuarioParticipante1,
+                usuarioParticipante2: chat.data().usuarioParticipante2,
+            })
+        });
+
+        return chats.sort((a, b) => b.idChat - a.idChat);
+    }
+
+    public async ObtenerTodosLosChats(userName: string): Promise<Chats[]> {
+        let response = await this.buscarLosChatsDelUsuario(userName)
+        return response;
+    }
+
+    private async obtenerMensajesSegunElChat(idChat: number): Promise<Mensajes[]> {
+        let mensajes: Mensajes[] = [];
+        const queryResponse = await getDocs(collection(this.db, "Chats", idChat.toString(), "Mensajes"));
+        queryResponse.forEach((msj) => {
+            // console.log(msj.id, " => ", msj.data());
+            mensajes.push({
+                idMensaje: msj.data().idMensaje,
+                texto: msj.data().texto,
+                usuarioEmisor: msj.data().usuarioEmisor,
+                usuarioReceptor: msj.data().usuarioReceptor,
+                fechaDeEnvio: msj.data().fechaDeEnvio,
+            });
+        });
+        return mensajes;
+    }
+
+    public async ObtenerTodosLosMensajes(idChat: number): Promise<Mensajes[]> {
+        let mensajes = await this.obtenerMensajesSegunElChat(idChat);
+        return mensajes
+    }
+
+    public async Login(username: string, contrasena: string): Promise<boolean> {
+        const userRef = doc(this.userCollection, username);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+            return userSnap.data().contrasena === contrasena;
+        }
+        return false;
+    }
+
+    public async UltimoIdDeChats(): Promise<number> {
+        return await getDocs(this.chatCollection)
+                    .then((response) => response.docs.length)
+                    .catch((error) => 0);
+    }
 }

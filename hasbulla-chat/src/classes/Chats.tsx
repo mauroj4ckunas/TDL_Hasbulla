@@ -1,8 +1,8 @@
 import { Mensajes } from "./Mensajes";
 
 export type Chats = {
-    idChat: string;
-    usuarioLogueado: string;
-    usuarioParticipe: string;
-    mensajes: Mensajes[];
+    idChat: number;
+    usuarioParticipante1: string;
+    usuarioParticipante2: string;
+    mensajes?: Mensajes[];
 }
