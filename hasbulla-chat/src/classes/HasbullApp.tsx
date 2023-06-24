@@ -1,4 +1,4 @@
-import { FirebaseBD } from "./BSconfig/FirebaseBD";
+import { FirebaseBD } from "./BDconfig/FirebaseBD";
 import { useLogin, useObtenerUsuario, useUsuarioExistente } from "./HooksFetch";
 import { Usuarios } from "./Usuarios";
 

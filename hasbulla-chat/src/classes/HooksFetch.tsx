@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FirebaseBD } from './BSconfig/FirebaseBD';
+import { FirebaseBD } from './BDconfig/FirebaseBD';
 import { Usuarios } from './Usuarios';
 import { Mensajes } from './Mensajes';
 import { Chats } from './Chats';
