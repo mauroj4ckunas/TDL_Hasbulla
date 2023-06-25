@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HasbullApp</title>
+</head>
+<body>
+  <h3>Ingrese nombre de chat:</h3>
+  <form id="chat-form">
+    <input id="room-input" autocomplete="off" />
+    <button>Enviar</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('room-input');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('join chat', input.value);
+        localStorage.setItem('username', input.value)
+        input.value = '';
+      }
+    });
+
+    // Manejar el evento de redireccionamiento
+    socket.on('redirect', (newPath) => {
+      window.location.href = newPath;
+    });
+
+  </script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HasbullApp</title>
+</head>
+<body>
+  <h3>Ingrese nombre usuario:</h3>
+  <form id="chat-form">
+    <input id="room-input" autocomplete="off" />
+    <button>Enviar</button>
+  </form>
+
+  <script>
+
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('room-input');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        const url = '/login';
+        const options = {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({username: input.value}),
+        };
+        fetch(url, options)
+        .then((response) => response.json())
+        .then((data) => {
+            if (data.redirectUrl) {
+            // Redireccionar a la página deseada
+            localStorage.setItem('username', input.value)
+            window.location.href = data.redirectUrl;
+            } else {
+            console.error('Error en la respuesta del servidor:', data);
+            }
+        })
+        .catch((error) => {
+            // Manejar errores de red u otros errores
+            console.error('Error en la solicitud POST a /login:', error);
+        });
+        input.value = '';
+      }
+    });
+  </script>
+</body>
+</html>

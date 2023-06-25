@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>HasbullApp</title>
+</head>
+<body>
+  <ul id="messages"></ul>
+  <form id="chat-form">
+    <input id="message-input" autocomplete="off" />
+    <button>Enviar</button>
+  </form>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let username = localStorage.getItem('username')
+
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('message-input');
+    const messages = document.getElementById('messages');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (input.value) {
+        socket.emit('chat message', input.value, username);
+        input.value = '';
+      }
+    });
+
+    socket.on('chat message', (message, sender) => {
+      const li = document.createElement('li');
+      li.textContent = sender + ': ' + message;
+      messages.appendChild(li);
+    });
+  </script>
+</body>
+</html>
