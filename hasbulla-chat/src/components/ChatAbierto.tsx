@@ -18,57 +18,37 @@ interface Props {
 
 export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props){
 
-    // let historialMensajes: Mensajes[] = useObtenerTodosLosMensajes(chat.idChat, db);
-
-    let historialMensajes : Mensajes[] = [
-        {
-            idMensaje: 1,
-            texto: 'HOLA REY COMO ESTAS??',
-            usuarioEmisor: 'mjackunas',
-            usuarioReceptor: 'salvarez'
-        },
-        {
-            idMensaje: 2,
-            texto: 'Bien y vos? Avanzaste algo con el TP?',
-            usuarioEmisor: 'salvarez',
-            usuarioReceptor: 'mjackunas'
-        },
-        {
-            idMensaje: 3,
-            texto: 'Si, ya estoy terminando mi parte. Y vos?',
-            usuarioEmisor: 'mjackunas',
-            usuarioReceptor: 'salvarez'
-        },
-        {
-            idMensaje: 4,
-            texto: 'Ya esta todo pusheado, fijate',
-            usuarioEmisor: 'salvarez',
-            usuarioReceptor: 'mjackunas'
-        },
-    ]
-
     const [mensajesMostrados, setMensajesMostrados] = useState<Mensajes[]>([]);
-    const [idMensajes, setIdMensajes] = useState<number>(historialMensajes.length);
-
-    // useEffect(() => {
-    //     setMensajesMostrados(historialMensajes);
-    // }, [historialMensajes])
+    const [idMensajes, setIdMensajes] = useState<number>(0);
 
     useEffect(() => {
-        setMensajesMostrados(historialMensajes);
-    }, [])
+        const getFetch = async () => {
+          const resp = await db.ObtenerTodosLosMensajes(chat.idChat);
+          setMensajesMostrados(ordenarPorId(resp));
+          setIdMensajes(resp.length);
+        };
+        
+        getFetch();
+    }, [chat]);
+
+    const ordenarPorId = (array: Mensajes[]): Mensajes[] => {
+        return array.sort((a, b) => a.idMensaje - b.idMensaje);
+    }
+
 
     const inputTextRef = useRef<HTMLInputElement | null>(null);
     const divRepoMensajesRef = useRef<HTMLDivElement | null>(null);
-    
-    const [texto, setTexto] = useState("");
-    let [mensaje, setMensaje] = useState<Mensajes>({
+
+    const mensajeInicial: Mensajes = {
         idMensaje: -1,
         texto: "",
         usuarioEmisor: usuarioLogueado.username,
         usuarioReceptor: contacto.username,
         fechaDeEnvio: "",
-    });
+    }
+
+    const [texto, setTexto] = useState("");
+    const [mensaje, setMensaje] = useState<Mensajes>(mensajeInicial);
 
     const getFechaActual = () =>{
         const e = new Date();
@@ -80,16 +60,14 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
     };
 
     useEffect(() => {
-        if (texto !== "") {
-            setMensaje((prevMensaje) => ({
-                ...prevMensaje,
-                texto: texto,
-                fechaDeEnvio: getFechaActual(),
-                idMensaje: idMensajes+1,
-            }));
-            setIdMensajes(idMensajes+1)
-        }
+        setTexto(texto);
     }, [texto]);
+
+    useEffect(() => {
+        setMensaje(mensaje);
+        agregarComponenteMensaje();
+        guardarEnBD();
+    }, [mensaje]);
 
     useEffect(() => {
         if (divRepoMensajesRef.current) {
@@ -101,13 +79,24 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
         setMensajesMostrados([...mensajesMostrados, mensaje])
     };
 
-    const EnviarMensaje = () => {
-        agregarComponenteMensaje();
+    const enviarMensaje = () => { 
+        if (texto !== "") {
+            setMensaje((prevMensaje) => ({
+                ...prevMensaje,
+                texto: texto,
+                fechaDeEnvio: getFechaActual(),
+                idMensaje: idMensajes+1,
+            }));
+            setIdMensajes(idMensajes+1)
+        }
         if (inputTextRef.current != null) {
             inputTextRef.current.value = "";
         }
-        //useGuardarMensaje(chat.idChat, mensaje, db);
     }
+
+    const guardarEnBD = async () => {
+        await db.GuardarMensaje(chat.idChat, mensaje);
+    };
 
     return(
         <div className='h-screen w-full relative flex flex-col'>
@@ -129,7 +118,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
                 </input>
                 <button id="enviar" className="my-5 ml-2 px-4 rounded-full
                         bg-cyan-300 hover:bg-cyan-50"
-                        onClick={EnviarMensaje}
+                        onClick={enviarMensaje}
                     >
                     <FontAwesomeIcon icon={faShare} size="2x"/>
                 </button>

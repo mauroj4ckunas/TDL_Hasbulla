@@ -6,14 +6,23 @@ import { Chats } from "../Chats";
 import { Mensajes } from "../Mensajes";
 
 export class FirebaseBD implements BD {
+    // readonly config = {
+    //     apiKey: "AIzaSyCzGZ0-owUYWeUdFbfNCLBNQydJfbg6Vyk",
+    //     authDomain: "hasbulla-aa6d6.firebaseapp.com",
+    //     projectId: "hasbulla-aa6d6",
+    //     storageBucket: "hasbulla-aa6d6.appspot.com",
+    //     messagingSenderId: "882559915520",
+    //     appId: "1:882559915520:web:1997724a6b127e56162ae5",
+    //     measurementId: "G-G9VS42G32Z"
+    // };
     readonly config = {
-        apiKey: "AIzaSyCzGZ0-owUYWeUdFbfNCLBNQydJfbg6Vyk",
-        authDomain: "hasbulla-aa6d6.firebaseapp.com",
-        projectId: "hasbulla-aa6d6",
-        storageBucket: "hasbulla-aa6d6.appspot.com",
-        messagingSenderId: "882559915520",
-        appId: "1:882559915520:web:1997724a6b127e56162ae5",
-        measurementId: "G-G9VS42G32Z"
+        apiKey: "AIzaSyDZYGJQgoSyjlCdesUk8FROR8--kCdJ3Vg",
+        authDomain: "test-e0c8e.firebaseapp.com",
+        projectId: "test-e0c8e",
+        storageBucket: "test-e0c8e.appspot.com",
+        messagingSenderId: "1056094483486",
+        appId: "1:1056094483486:web:0f4dbf1eec1ca6fb5aaa0f",
+        measurementId: "G-EL016NFXZB"
     };
 
     private app = initializeApp(this.config, "HasbullApp");
@@ -106,7 +115,6 @@ export class FirebaseBD implements BD {
         let mensajes: Mensajes[] = [];
         const queryResponse = await getDocs(collection(this.db, "Chats", idChat.toString(), "Mensajes"));
         queryResponse.forEach((msj) => {
-            // console.log(msj.id, " => ", msj.data());
             mensajes.push({
                 idMensaje: msj.data().idMensaje,
                 texto: msj.data().texto,

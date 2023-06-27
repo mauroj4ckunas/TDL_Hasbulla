@@ -6,7 +6,7 @@ export interface BD {
     readonly config: any;
     VerSiUsuarioExisteEnBD(username: string): Promise<boolean>;
     CrearUsuario(nuevoUsuario: Usuarios): Promise<boolean>;
-    ObtenerUsuario(username: string): Promise<Usuarios | null>
+    ObtenerUsuario(username: string): Promise<Usuarios | null>;
     Login(username: string, contrasena: string): Promise<boolean>;
     CrearChat(idChat: number, usuarioLogueado: string, usuarioParticipe: string): Promise<void>;
     GuardarMensaje(idChat: number, mensaje: Mensajes): Promise<void>;

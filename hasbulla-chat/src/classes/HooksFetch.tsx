@@ -12,7 +12,7 @@ export const useUsuarioExistente = (username: string, db: FirebaseBD): boolean =
           setExiste(resp);
         };
         getFetch();
-    }, [username, db]);
+    }, []);
     
     return existe;
 }
@@ -25,7 +25,7 @@ export const useCrearUsuario = (nuevoUsuario: Usuarios, db: FirebaseBD): boolean
           setSeCreo(resp);
         };
         getFetch();
-    }, [nuevoUsuario, db]);
+    }, []);
     
     return seCreo;
 }
@@ -42,7 +42,7 @@ export const useObtenerUsuario = (username: string, db: FirebaseBD): Usuarios | 
           setUsuario(resp);
         };
         getFetch();
-    }, [username, db]);
+    }, []);
     
     return usuario;
 }
@@ -55,7 +55,7 @@ export const useLogin = (username: string, contrasena: string, db: FirebaseBD): 
           setLogin(resp);
         };
         getFetch();
-    }, [username, contrasena, db]);
+    }, []);
     
     return login;
 }
@@ -66,7 +66,7 @@ export const useCrearChat = (idChat: number, usuarioLogueado: string, usuarioPar
           await db.CrearChat(idChat, usuarioLogueado, usuarioParticipe)
         };
         getFetch();
-    }, [idChat, usuarioLogueado, usuarioParticipe, db]);
+    }, []);
 }
 
 export const useGuardarMensaje = (idChat: number, mensaje: Mensajes, db: FirebaseBD) => {
@@ -75,7 +75,7 @@ export const useGuardarMensaje = (idChat: number, mensaje: Mensajes, db: Firebas
           await db.GuardarMensaje(idChat, mensaje);
         };
         getFetch();
-    }, [idChat, mensaje, db]);
+    }, [mensaje]);
 }
 
 export const useObtenerTodosLosChats = (userName: string, db: FirebaseBD): Chats[] => {
@@ -86,22 +86,44 @@ export const useObtenerTodosLosChats = (userName: string, db: FirebaseBD): Chats
           setChats(resp);
         };
         getFetch();
-    }, [userName, db]);
+    }, []);
 
     return chats;
 }
 
 export const useObtenerTodosLosMensajes = (idChat: number, db: FirebaseBD): Mensajes[] => {
     const [mensajes, setMensajes] = useState<Mensajes[]>([])
+    
     useEffect(() => {
         const getFetch = async () => {
           const resp = await db.ObtenerTodosLosMensajes(idChat);
           setMensajes(resp);
         };
+        
         getFetch();
-    }, [idChat, db]);
+    }, [idChat]);
 
     return mensajes;
+}
+
+export const useObtenerUltimoMensaje = (idChat: number, db: FirebaseBD): Mensajes => {
+    const [mensaje, setMensaje] = useState<Mensajes>({
+        idMensaje: -1,
+        texto: "",
+        usuarioEmisor: "",
+        usuarioReceptor: ""
+    })
+    useEffect(() => {
+        const getFetch = async () => {
+          const resp = await db.ObtenerTodosLosMensajes(idChat);
+          const ultimo = resp[resp.length - 1];
+          setMensaje(ultimo);
+        };
+        
+        getFetch();
+    }, []);
+
+    return mensaje;
 }
 
 export const useUltimoIdDeChats = (db: FirebaseBD): number => {
@@ -112,7 +134,7 @@ export const useUltimoIdDeChats = (db: FirebaseBD): number => {
           setCantChats(resp);
         };
         getFetch();
-    }, [db]);
+    }, []);
 
     return cantChats;
 }
