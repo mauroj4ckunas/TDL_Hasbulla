@@ -110,13 +110,13 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
             </div>center
             <div className="mt-auto w-full flex justify-center">
                 <div className='w-1/4 flex justify-center'>
-                    <div className='bg-cyan-700 absolute top-[74%] px-5 py-7 flex flex-col rounded-sm text-white'>
-                        <span className=''>
-                            <button className=''>Imágen</button>
-                        </span>
-                        <span>
-                            <button>Ubicación</button>
-                        </span>
+                    <div className='bg-cyan-700 absolute top-[70%] flex flex-col rounded-sm text-white more-option'>
+                        <div className='my-3 mx-2 text-center more-option'>
+                            <button className='bg-cyan-600 font-medium p-2 bg-opacity-50 hover:bg-opacity-70 rounded-md shadow-lg hover:shadow-none'>Imágen</button>
+                        </div>
+                        <div className='my-3 mx-2 text-centers more-option'>
+                            <button className='bg-cyan-600 font-medium p-2 bg-opacity-50 hover:bg-opacity-70 rounded-md shadow-lg hover:shadow-none'>Ubicación</button>
+                        </div>
                     </div>
                     <button className='bg-cyan-300 my-5 px-4 rounded-full hover:bg-cyan-50'>
                         <FontAwesomeIcon icon={faBars} size="lg"/>

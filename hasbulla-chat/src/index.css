@@ -5,3 +5,18 @@
 .scroll_chat::-webkit-scrollbar{
     width: 1px;
 }
+
+/* The animation code */
+@keyframes show_up {
+  0%   {top: 80%;}
+  25%  {top: 80%;}
+  50%  {top: 60%;}
+  75%  {top: 40%;}
+  100% {top: 20%;}
+}
+
+/* The element to apply the animation to */
+.more-option {
+  animation-name: show_up;
+  animation-duration: 3s;
+}
