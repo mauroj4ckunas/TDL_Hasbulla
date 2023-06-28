@@ -10,6 +10,7 @@ import { useObtenerTodosLosChats, useObtenerUltimoMensaje, useObtenerUsuario } f
 import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import NingunChatAbierto from './NingunChatAbierto';
 import { Mensajes } from '../classes/Mensajes';
+import AgregarContacto from './AgregarContacto';
 
 interface Props {
   usuarioLogueado: Usuarios,
@@ -68,12 +69,26 @@ export default function Wordspace({usuarioLogueado}: Props) {
     );
   });
 
+  const [modalContacto, setModalContacto] = useState<boolean>(false);
+
+  const handlerAbrirModal = () => setModalContacto(true);
+
+  const handlerCerrarModal = () => {
+    setModalContacto(false);
+    console.log("Modal cerrado")
+  }
+
+  const agendarUsuario = () => {
+    setModalContacto(false);
+    handlerCerrarModal()
+  }
+
   return (
     <>
     <div className='flex'>
       <section id="lista-chats" className='bg-gray-800 h-screen w-0 md:w-1/4'>
           <div className="h-screen">
-              <TituloChats/>
+              <TituloChats mostrarModal={handlerAbrirModal}/>
               <ul className="">
                 {listaDeContactos}
               </ul>
@@ -89,6 +104,7 @@ export default function Wordspace({usuarioLogueado}: Props) {
         }
       </section>
     </div>
+    {modalContacto && <AgregarContacto show={modalContacto} cerrarModal={handlerCerrarModal}/>}
     </>
   );
 }

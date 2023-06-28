@@ -2,10 +2,10 @@ import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import NombreDeChat from './NombreDeChat';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShare } from '@fortawesome/free-solid-svg-icons';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { MensajeEnviado, MensajeRecibido } from './Mensaje';
 import { Mensajes } from '../classes/Mensajes';
 import { Usuarios } from '../classes/Usuarios';
-import { useGuardarMensaje, useObtenerTodosLosMensajes } from '../classes/HooksFetch';
 import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import { Chats } from '../classes/Chats';
 
@@ -27,7 +27,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
           setMensajesMostrados(ordenarPorId(resp));
           setIdMensajes(resp.length);
         };
-        
+
         getFetch();
     }, [chat]);
 
@@ -79,7 +79,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
         setMensajesMostrados([...mensajesMostrados, mensaje])
     };
 
-    const enviarMensaje = () => { 
+    const enviarMensaje = () => {
         if (texto !== "") {
             setMensaje((prevMensaje) => ({
                 ...prevMensaje,
@@ -107,21 +107,36 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
                         return msj.usuarioEmisor === usuarioLogueado.username ? <MensajeEnviado key={index} texto={msj.texto}/> : <MensajeRecibido key={index} texto={msj.texto}/>
                     })}
                 </div>
-            </div>
-            <div className="mt-auto flex w-full justify-center">  
-                <input ref={ inputTextRef }
-                    id="input_mensaje" type="text" placeholder="Escriba un mensaje"
-                    className="my-5 px-4 py-3 w-2/3 rounded-full
-                    bg-gray-900 text-white"
-                    onChange={getValorInput}
-                >
-                </input>
-                <button id="enviar" className="my-5 ml-2 px-4 rounded-full
-                        bg-cyan-300 hover:bg-cyan-50"
-                        onClick={enviarMensaje}
+            </div>center
+            <div className="mt-auto w-full flex justify-center">
+                <div className='w-1/4 flex justify-center'>
+                    <div className='bg-cyan-700 absolute top-[74%] px-5 py-7 flex flex-col rounded-sm text-white'>
+                        <span className=''>
+                            <button className=''>Imágen</button>
+                        </span>
+                        <span>
+                            <button>Ubicación</button>
+                        </span>
+                    </div>
+                    <button className='bg-cyan-300 my-5 px-4 rounded-full hover:bg-cyan-50'>
+                        <FontAwesomeIcon icon={faBars} size="lg"/>
+                    </button>
+                </div>
+                <div className='w-3/4 flex'>
+                    <input ref={ inputTextRef }
+                        id="input_mensaje" type="text" placeholder="Escriba un mensaje"
+                        className="my-5 px-4 py-3 w-2/3 rounded-full
+                        bg-gray-900 text-white"
+                        onChange={getValorInput}
                     >
-                    <FontAwesomeIcon icon={faShare} size="2x"/>
-                </button>
+                    </input>
+                    <button id="enviar" className="my-5 ml-2 px-4 rounded-full
+                            bg-cyan-300 hover:bg-cyan-50"
+                            onClick={enviarMensaje}
+                        >
+                        <FontAwesomeIcon icon={faShare} size="2xl"/>
+                    </button>
+                </div>
             </div>
         </div>
     );
