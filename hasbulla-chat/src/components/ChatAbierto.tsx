@@ -1,13 +1,13 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import NombreDeChat from './NombreDeChat';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShare } from '@fortawesome/free-solid-svg-icons';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { faShare, faBars, faImage, faLocationDot } from '@fortawesome/free-solid-svg-icons';
 import { MensajeEnviado, MensajeRecibido } from './Mensaje';
 import { Mensajes } from '../classes/Mensajes';
 import { Usuarios } from '../classes/Usuarios';
 import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import { Chats } from '../classes/Chats';
+import { SpeedDial, SpeedDialAction } from '@mui/material';
 
 interface Props {
     chat: Chats,
@@ -107,20 +107,23 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
                         return msj.usuarioEmisor === usuarioLogueado.username ? <MensajeEnviado key={index} texto={msj.texto}/> : <MensajeRecibido key={index} texto={msj.texto}/>
                     })}
                 </div>
-            </div>center
+            </div>
             <div className="mt-auto w-full flex justify-center">
                 <div className='w-1/4 flex justify-center'>
-                    <div className='bg-cyan-700 absolute top-[70%] flex flex-col rounded-sm text-white more-option'>
-                        <div className='my-3 mx-2 text-center more-option'>
-                            <button className='bg-cyan-600 font-medium p-2 bg-opacity-50 hover:bg-opacity-70 rounded-md shadow-lg hover:shadow-none'>Imágen</button>
-                        </div>
-                        <div className='my-3 mx-2 text-centers more-option'>
-                            <button className='bg-cyan-600 font-medium p-2 bg-opacity-50 hover:bg-opacity-70 rounded-md shadow-lg hover:shadow-none'>Ubicación</button>
-                        </div>
-                    </div>
-                    <button className='bg-cyan-300 my-5 px-4 rounded-full hover:bg-cyan-50'>
-                        <FontAwesomeIcon icon={faBars} size="lg"/>
-                    </button>
+                    <SpeedDial ariaLabel="Opciones de mensajes" sx={{ position: 'absolute', top: 515}} icon={<FontAwesomeIcon icon={faBars} size="lg"/>}>
+                        <SpeedDialAction
+                            key={'Imágen'}
+                            icon={<FontAwesomeIcon icon={faImage} size="lg"/>}
+                            tooltipTitle={'Enviar Imágen'}
+                            onClick={() => console.log('Se envió la imagen')}
+                        />
+                        <SpeedDialAction
+                            key={'Ubicación'}
+                            icon={<FontAwesomeIcon icon={faLocationDot} size="lg"/>}
+                            tooltipTitle={'Enviar Ubicación'}
+                            onClick={() => console.log('Se envió la ubicacion')}
+                        />
+                    </SpeedDial>
                 </div>
                 <div className='w-3/4 flex'>
                     <input ref={ inputTextRef }
