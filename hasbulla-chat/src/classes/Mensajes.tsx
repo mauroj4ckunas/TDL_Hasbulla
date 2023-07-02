@@ -3,5 +3,6 @@ export type Mensajes = {
     texto: string,
     usuarioEmisor: string,
     usuarioReceptor: string,
+    imagen: string,
     fechaDeEnvio?: string,
 }

@@ -111,7 +111,8 @@ export const useObtenerUltimoMensaje = (idChat: number, db: FirebaseBD): Mensaje
         idMensaje: -1,
         texto: "",
         usuarioEmisor: "",
-        usuarioReceptor: ""
+        usuarioReceptor: "",
+        imagen: "",
     })
     useEffect(() => {
         const getFetch = async () => {

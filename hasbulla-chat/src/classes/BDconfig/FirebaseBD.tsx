@@ -77,6 +77,7 @@ export class FirebaseBD implements BD {
             texto: mensaje.texto,
             usuarioEmisor: mensaje.usuarioEmisor,
             usuarioReceptor: mensaje.usuarioReceptor,
+            imagen: mensaje.imagen,
             fechaDeEnvio: mensaje.fechaDeEnvio,
         })
     }
@@ -120,6 +121,7 @@ export class FirebaseBD implements BD {
                 texto: msj.data().texto,
                 usuarioEmisor: msj.data().usuarioEmisor,
                 usuarioReceptor: msj.data().usuarioReceptor,
+                imagen: msj.data().imagen,
                 fechaDeEnvio: msj.data().fechaDeEnvio,
             });
         });

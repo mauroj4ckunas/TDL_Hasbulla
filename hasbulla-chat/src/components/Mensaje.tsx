@@ -1,15 +1,21 @@
 import React from 'react';
+import { Mensajes } from '../classes/Mensajes';
 
 interface Props {
-    texto: string;
+    mensaje: Mensajes;
 }
 
-export function MensajeEnviado({texto}: Props){
+export function MensajeEnviado({mensaje}: Props){
     return (
         <>  
             <div className='self-end max-w-md bg-green-100 rounded-md px-2 py-1'>
+                {mensaje.imagen && 
+                    <div className='my-1'>
+                        <img src={mensaje.imagen} alt={'Mensaje con imágen'}/>
+                    </div>
+                }
                 <p>
-                    {texto}
+                    {mensaje.texto}
                 </p>
             </div>
         </>
@@ -17,12 +23,17 @@ export function MensajeEnviado({texto}: Props){
 }
 
 
-export function MensajeRecibido({texto}: Props){
+export function MensajeRecibido({mensaje}: Props){
     return (
         <>
             <div className='self-start max-w-md bg-yellow-100 rounded-md px-2 py-1'>
+                {mensaje.imagen && 
+                    <div className='my-1'>
+                        <img src={mensaje.imagen} alt={'Mensaje con imágen'}/>
+                    </div>
+                }
                 <p>
-                    {texto}
+                    {mensaje.texto}
                 </p>
             </div>
         </>
