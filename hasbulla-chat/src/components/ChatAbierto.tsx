@@ -10,6 +10,7 @@ import { Chats } from '../classes/Chats';
 import { SpeedDial, SpeedDialAction } from '@mui/material';
 import EnviarImagen from './EnviarImagen';
 import EnviarUbicacion from './EnviarUbicacion';
+import MapaUbicacionActual from './MapaUbicacionActual';
 
 interface Props {
     chat: Chats,
@@ -47,11 +48,13 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
         usuarioEmisor: usuarioLogueado.username,
         usuarioReceptor: contacto.username,
         imagen: "",
+        coordenadas: [],
         fechaDeEnvio: "",
     }
 
     const [texto, setTexto] = useState("");
     const [base64, setBase64] = useState("");
+    const [coordenadas, setCoordenadas] = useState<number[]>([]);
     const [mensaje, setMensaje] = useState<Mensajes>(mensajeInicial);
 
     const getFechaActual = () =>{
@@ -66,6 +69,14 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
     useEffect(() => {
         setTexto(texto);
     }, [texto]);
+
+    useEffect(() => {
+        setCoordenadas(coordenadas);
+    }, [coordenadas]);
+
+    useEffect(() => {
+        setBase64(base64);
+    }, [base64]);
 
     useEffect(() => {
         setMensaje(mensaje);
@@ -84,12 +95,13 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
     };
 
     const enviarMensaje = () => {
-        if (texto !== "") {
+        if (texto !== '' || (texto === '' && base64) || (texto === '' && coordenadas)) {
             setMensaje((prevMensaje) => ({
                 ...prevMensaje,
                 texto: texto,
                 fechaDeEnvio: getFechaActual(),
                 imagen: base64,
+                coordenadas: coordenadas,
                 idMensaje: idMensajes+1,
             }));
             setIdMensajes(idMensajes+1)
@@ -98,6 +110,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
             inputTextRef.current.value = "";
         }
         setBase64('');
+        setCoordenadas([]);
     }
 
     const guardarEnBD = async () => {
@@ -119,15 +132,17 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
 
     const handlerAbrirModalUbicacion = () => setModalUbicacion(true);
 
-    const handlerCerrarModalUbicacion = () => setModalUbicacion(false);
+    const handlerCerrarModalUbicacion = () => {
+        setModalUbicacion(false);
+        setCoordenadas([]);
+    };
     
 
-    const enviarUbicacion = () => {
-        setModalUbicacion(false);
-        handlerCerrarModalUbicacion()
+    const enviarUbicacion = (coordenadas: number[]) => {
+        handlerCerrarModalUbicacion();
+        setCoordenadas(coordenadas);
+        setBase64('');
     }
-
-
 
     return(
         <div className='h-screen w-full relative flex flex-col'>
@@ -158,7 +173,10 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
                 </div>
                 <div className='w-3/4 flex'>
                     {base64 !== '' && <div className='absolute flex w-1/5 h-1/4 bg-cyan-900 p-2 top-[64%] right-[30%] rounded-md items-center justify-center'>
-                        <img src={base64} alt={'Imágen cargada'} className='w-auto h-full'/>
+                        <img src={base64} alt={'Imágen cargada'} className='max-w-full max-h-full'/>
+                    </div>}
+                    {coordenadas.length !== 0 && <div className='absolute flex w-1/5 h-1/4 bg-cyan-900 p-2 top-[64%] right-[30%] rounded-md items-center justify-center'>
+                        <MapaUbicacionActual coordenadas={[coordenadas[0], coordenadas[1]]}/>
                     </div>}
                     <input ref={ inputTextRef }
                         id="input_mensaje" type="text" placeholder="Escriba un mensaje"
@@ -176,7 +194,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
                 </div>
             </div>
             {modalImagen && <EnviarImagen show={modalImagen} cerrarModal={handlerCerrarModalImagen} enviar={enviarImagen}/>}
-            {modalUbicacion && <EnviarUbicacion show={modalUbicacion} cerrarModal={handlerCerrarModalUbicacion}/>}
+            {modalUbicacion && <EnviarUbicacion show={modalUbicacion} cerrarModal={handlerCerrarModalUbicacion} enviar={enviarUbicacion}/>}
         </div>
     );
 }

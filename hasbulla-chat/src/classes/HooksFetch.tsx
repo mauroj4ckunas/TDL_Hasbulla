@@ -113,6 +113,7 @@ export const useObtenerUltimoMensaje = (idChat: number, db: FirebaseBD): Mensaje
         usuarioEmisor: "",
         usuarioReceptor: "",
         imagen: "",
+        coordenadas: [],
     })
     useEffect(() => {
         const getFetch = async () => {

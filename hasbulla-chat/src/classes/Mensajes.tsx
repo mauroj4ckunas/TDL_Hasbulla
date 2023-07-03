@@ -4,5 +4,6 @@ export type Mensajes = {
     usuarioEmisor: string,
     usuarioReceptor: string,
     imagen: string,
+    coordenadas: number[],
     fechaDeEnvio?: string,
 }
