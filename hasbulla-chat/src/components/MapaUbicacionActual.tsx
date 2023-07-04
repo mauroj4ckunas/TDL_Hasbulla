@@ -22,7 +22,7 @@ export default function MapaUbicacionActual({coordenadas}: Props) {
                 url="https://wms.ign.gob.ar/geoserver/gwc/service/tms/1.0.0/capabaseargenmap@EPSG%3A3857@png/{z}/{x}/{-y}.png"
             />
             <Marker position={coordenadas} icon={iconLocation}>
-                <Popup>Tu ubicación actual</Popup>
+                <Popup>Ubicación actual</Popup>
             </Marker>
         </MapContainer>
     </>

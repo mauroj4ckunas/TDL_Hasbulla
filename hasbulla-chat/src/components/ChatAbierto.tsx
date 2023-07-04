@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import NombreDeChat from './NombreDeChat';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShare, faBars, faImage, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import { faShare, faBars, faImage, faLocationDot, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { MensajeEnviado, MensajeRecibido } from './Mensaje';
 import { Mensajes } from '../classes/Mensajes';
 import { Usuarios } from '../classes/Usuarios';
@@ -126,6 +126,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
     const enviarImagen = (base64: string) => {
         handlerCerrarModalImagen()
         setBase64(base64);
+        setCoordenadas([]);
     }
 
     const [modalUbicacion, setModalUbicacion] = useState<boolean>(false);
@@ -137,11 +138,15 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
         setCoordenadas([]);
     };
     
-
     const enviarUbicacion = (coordenadas: number[]) => {
         handlerCerrarModalUbicacion();
         setCoordenadas(coordenadas);
         setBase64('');
+    }
+
+    const handlerCancelarEleccion = () => {
+        setBase64('');
+        setCoordenadas([]);
     }
 
     return(
@@ -155,8 +160,14 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
                 </div>
             </div>
             <div className="mt-auto w-full flex justify-center">
-                <div className='w-1/4 flex justify-center'>
-                    <SpeedDial ariaLabel="Opciones de mensajes" sx={{ position: 'absolute', top: 515}} icon={<FontAwesomeIcon icon={faBars} size="lg"/>}>
+                <div className='w-1/4 mb-5 flex justify-center'>
+                    <SpeedDial ariaLabel="Opciones de mensajes" sx={{ position: 'absolute', top: 460}} icon={<FontAwesomeIcon icon={faBars} size="lg"/>}>   
+                        <SpeedDialAction
+                            key={'Cancelar'}
+                            icon={<FontAwesomeIcon icon={faXmark} size="lg"/>}
+                            tooltipTitle={'Cancelar elección'}
+                            onClick={handlerCancelarEleccion}
+                        />
                         <SpeedDialAction
                             key={'Imágen'}
                             icon={<FontAwesomeIcon icon={faImage} size="lg"/>}
@@ -172,10 +183,10 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
                     </SpeedDial>
                 </div>
                 <div className='w-3/4 flex'>
-                    {base64 !== '' && <div className='absolute flex w-1/5 h-1/4 bg-cyan-900 p-2 top-[64%] right-[30%] rounded-md items-center justify-center'>
+                    {base64 !== '' && <div className='absolute flex w-1/5 h-1/4 bg-cyan-900 p-2 top-[64%] right-[30%] rounded-md items-center justify-center z-10'>
                         <img src={base64} alt={'Imágen cargada'} className='max-w-full max-h-full'/>
                     </div>}
-                    {coordenadas.length !== 0 && <div className='absolute flex w-1/5 h-1/4 bg-cyan-900 p-2 top-[64%] right-[30%] rounded-md items-center justify-center'>
+                    {coordenadas.length !== 0 && <div className='absolute flex w-1/5 h-1/4 bg-cyan-900 p-2 top-[64%] right-[30%] rounded-md items-center justify-center z-10'>
                         <MapaUbicacionActual coordenadas={[coordenadas[0], coordenadas[1]]}/>
                     </div>}
                     <input ref={ inputTextRef }
