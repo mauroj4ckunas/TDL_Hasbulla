@@ -11,6 +11,7 @@ import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import NingunChatAbierto from './NingunChatAbierto';
 import { Mensajes } from '../classes/Mensajes';
 import AgregarContacto from './AgregarContacto';
+import CerrarSesion from './CerrarSesion';
 
 interface Props {
   usuarioLogueado: Usuarios,
@@ -71,24 +72,32 @@ export default function Wordspace({usuarioLogueado}: Props) {
 
   const [modalContacto, setModalContacto] = useState<boolean>(false);
 
-  const handlerAbrirModal = () => setModalContacto(true);
+  const handlerAbrirModalContacto = () => setModalContacto(true);
 
-  const handlerCerrarModal = () => {
-    setModalContacto(false);
-    console.log("Modal cerrado")
+  const handlerCerrarModalContacto = () => setModalContacto(false);
+
+  const agendarContacto = () => {
+    handlerCerrarModalContacto();
   }
 
-  const agendarUsuario = () => {
-    setModalContacto(false);
-    handlerCerrarModal()
+  const [modalCierreSesion, setModalCierreSesion] = useState<boolean>(false);
+
+  const handlerAbrirModalCerrarSesion = () => setModalCierreSesion(true);
+
+  const handlerCerrarModalCerrarSesion = () => setModalCierreSesion(false);
+
+  const cerrarSesion = () => {
+    handlerCerrarModalCerrarSesion();
+    console.log('Sesion cerrada')
   }
+
 
   return (
     <>
     <div className='flex'>
       <section id="lista-chats" className='bg-gray-800 h-screen w-0 md:w-1/4'>
           <div className="h-screen">
-              <TituloChats mostrarModal={handlerAbrirModal}/>
+              <TituloChats modalAgregarUsuario={handlerAbrirModalContacto} modalCierreSesion={handlerAbrirModalCerrarSesion}/>
               <ul className="">
                 {listaDeContactos}
               </ul>
@@ -104,7 +113,8 @@ export default function Wordspace({usuarioLogueado}: Props) {
         }
       </section>
     </div>
-    {modalContacto && <AgregarContacto show={modalContacto} cerrarModal={handlerCerrarModal}/>}
+    {modalContacto && <AgregarContacto show={modalContacto} cerrarModal={handlerCerrarModalContacto} agregarContacto={agendarContacto}/>}
+    {modalCierreSesion && <CerrarSesion show={modalCierreSesion} cerrarModal={handlerCerrarModalCerrarSesion} cerrarSesion={cerrarSesion}/>}
     </>
   );
 }

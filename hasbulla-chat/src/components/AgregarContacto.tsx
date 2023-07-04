@@ -7,11 +7,12 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 
 interface Props {
-    cerrarModal: () => void;
-    show: boolean;
+    cerrarModal: () => void,
+    agregarContacto: () => void,
+    show: boolean,
 }
 
-export default function AgregarContacto({show, cerrarModal}: Props){
+export default function AgregarContacto({show, cerrarModal, agregarContacto}: Props){
 
     return <>
         <div>
@@ -34,7 +35,7 @@ export default function AgregarContacto({show, cerrarModal}: Props){
             </DialogContent>
             <DialogActions>
             <Button onClick={cerrarModal}>Cancelar</Button>
-            <Button onClick={cerrarModal}>Agregar usuario</Button>
+            <Button onClick={agregarContacto}>Agregar usuario</Button>
             </DialogActions>
         </Dialog>
         </div>

@@ -48,7 +48,7 @@ export function MensajeRecibido({mensaje}: Props){
                         <img src={mensaje.imagen} alt={'Mensaje con imágen'} className='max-w-full max-h-full'/>
                     </div>
                 }
-                <p className='mt-2'>
+                <p className={`${mensaje.imagen || mensaje.coordenadas.length !== 0 ? 'mt-2' : ''}`}>
                     {mensaje.texto}
                 </p>
             </div>
