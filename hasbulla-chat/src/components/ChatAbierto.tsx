@@ -11,12 +11,11 @@ import { SpeedDial, SpeedDialAction } from '@mui/material';
 import EnviarImagen from './EnviarImagen';
 import EnviarUbicacion from './EnviarUbicacion';
 import MapaUbicacionActual from './MapaUbicacionActual';
-
 interface Props {
     chat: Chats,
     usuarioLogueado: Usuarios,
     contacto: Usuarios,
-    db: FirebaseBD
+    db: FirebaseBD,
 }
 
 export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props){
@@ -29,6 +28,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
           const resp = await db.ObtenerTodosLosMensajes(chat.idChat);
           setMensajesMostrados(ordenarPorId(resp));
           setIdMensajes(resp.length);
+
         };
 
         getFetch();

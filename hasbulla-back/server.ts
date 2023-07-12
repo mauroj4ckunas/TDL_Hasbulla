@@ -1,59 +1,71 @@
-import express, { Request, Response } from 'express';
-import { SocketManager } from './utils/SocketManager'
+import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io';
+import { userConnectionController } from './controllers/userConnectionController';
+import { FirebaseDB } from './models/BDconfig/FirebaseDB';
+import { DB } from './models/BDconfig/DB';
+import { UserModel } from './models/UserModel';
+import { resolve } from 'path';
 
+
+const port = 5000;
 const app = express();
-app.use(express.json());
-import dotenv from 'dotenv';
-dotenv.config();
-const port = process.env.PORT
+const server = http.createServer(app);
 
-const server = app.listen(port, () => {
-  console.log(`Servidor en funcionamiento en http://localhost:${port}`);
-});
-//const io = new SocketIOServer(server);
+const io = new Server(server, {
+  cors: {origin: `http://localhost:3000`}
+})
 
-app.get('/', (req: Request, res: Response) => {
-  res.sendFile(__dirname + '/index.html');
-});
+const userConnection = new userConnectionController();
+const db: DB = new FirebaseDB();
 
-app.get('/login', (req: Request, res: Response) => {
-  res.sendFile(__dirname + '/views/login.html');
-});
+io.on("connection", (socket) => {
+  
+  console.log('Cliente conectado');
+  socket.join('chat');
 
-app.post('/login', (req: Request, res: Response) => {
-  console.log(req.body)
-  const { username } = req.body
-
-  if(username)
-    res.status(200).json({ redirectUrl: '/live-chat' })
-  else 
-    res.status(400).json({message: 'login incorrecto'})
-});
-
-app.get('/live-chat', (req: Request, res: Response) => {
-  res.sendFile(__dirname + '/views/live_chat.html');
-});
-
-const socketManager = SocketManager.getInstance(server)
-
-/* io.on('connection', (socket: Socket) => {
-  console.log('Un cliente se ha conectado');
-
-  socket.on('chat message', (message: string, sender: string) => {
-    console.log('Mensaje recibido:', message, sender);
-    const msg = new Message(message, sender);
-    io.emit('chat message', msg.getTextMessage(), msg.getSender());
-    // io.to(chatRoom).emit('chat message', msg.getTextMessage());
+  socket.on("handle-connection", async (username: string, password: string) => {
+    let connection = await handleConnection(username, password);
+    if (connection) {
+      socket.emit("username-refuse");
+    } else {
+      socket.emit("username-success");
+      io.emit("get-connected-users", userConnection.getUsers());
+    }
   });
 
-  socket.on('join chat', (chatRoom: string) => {
-    console.log('join chat:', chatRoom)
-    // socket.join(chatRoom)
-    // Emitir evento de redireccionamiento al cliente
-    socket.emit('redirect', '/live-chat');
+  socket.on("disconnect", (username: string) => {
+    handleDisconnection(username);
+  });
+
+});
+
+const obtainUser = (username: string): Promise<UserModel | null> => {
+  return new Promise((reject, refuse) => {
+    db.getUser(username).then(user => {
+      reject(user);
+    }).catch(error => refuse(error))
   })
+}
 
-  socket.on('disconnect', () => {
-    console.log('Un cliente se ha desconectado');
+const handleDisconnection = async (username: string) => {
+  const userDisconnect = await obtainUser(username);
+  if (userDisconnect !== null) {
+    userConnection.desconnectUser(userDisconnect);
+  }
+}
+
+const handleConnection = async (username: string, password: string): Promise<boolean> => {
+  const posibleUser = await obtainUser(username);
+  return new Promise((resolve, reject) => {
+    let connect: boolean;
+    if (posibleUser !== null) {
+      connect = userConnection.connectUser(posibleUser, password);
+    } else {
+      connect = false;
+    }
+    resolve(connect);
   });
-}); */
+}
+
+server.listen(port, () => console.log(`Servidor en funcionamiento en http://localhost:${port}`))

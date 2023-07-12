@@ -35,7 +35,7 @@ export function MensajeEnviado({mensaje}: Props){
 export function MensajeRecibido({mensaje}: Props){
     return (
         <>
-            <div className='self-start max-w-md bg-yellow-100 rounded-md px-2 py-1 z-50'>
+            <div className='self-start max-w-md bg-yellow-100 rounded-md px-2 py-1 z-10'>
                 {   
                     mensaje.coordenadas.length !== 0 && 
                     <div className='w-80 h-80'>

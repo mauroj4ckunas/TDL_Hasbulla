@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import '../index.css';
 import fondo from '../assets/fondo-hasbulla.png'
 import ChatAbierto from './ChatAbierto';
@@ -6,10 +6,9 @@ import TituloChats from './TituloChats';
 import ContactoChat from './ContactoChat';
 import { Usuarios } from '../classes/Usuarios';
 import { Chats } from '../classes/Chats';
-import { useObtenerTodosLosChats, useObtenerUltimoMensaje, useObtenerUsuario } from '../classes/HooksFetch';
+import { useObtenerTodosLosChats } from '../classes/HooksFetch';
 import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import NingunChatAbierto from './NingunChatAbierto';
-import { Mensajes } from '../classes/Mensajes';
 import AgregarContacto from './AgregarContacto';
 import CerrarSesion from './CerrarSesion';
 
@@ -20,7 +19,6 @@ interface Props {
 export default function Wordspace({usuarioLogueado}: Props) {
 
   const db: FirebaseBD = new FirebaseBD();
-
   let chats: Chats[] = useObtenerTodosLosChats(usuarioLogueado.username, db)
 
   const contactoInicial = {

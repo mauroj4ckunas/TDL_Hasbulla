@@ -9,8 +9,7 @@ import {Link} from "react-router-dom"
 
 
 export default function RegisterPage(){
-    return(
-        <body>    
+    return(    
        <form className="formulario">
         <h1>Registrate</h1>
         <div className="contenedor">
@@ -30,10 +29,9 @@ export default function RegisterPage(){
             </div>
 
             <input type="submit" value="Registrate" className="button"></input>
-            <p>¿Ya tienes una cuenta? <Link to='/'>Iniciar Sesion</Link></p>
+            <p className=" text-center mt-2">¿Ya tienes una cuenta? <Link to='/' className="text-blue-950 hover:text-blue-300 underline decoration-blue-950 hover:decoration-blue-300">Iniciar Sesion</Link></p>
             </div>
        </form>
-       </body>
 
     );
 }

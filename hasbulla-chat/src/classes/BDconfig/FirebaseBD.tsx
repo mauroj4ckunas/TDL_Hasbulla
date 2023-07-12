@@ -1,6 +1,7 @@
 import { Firestore, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore/lite";
 import { BD } from "./BD";
 import { initializeApp } from "firebase/app";
+import { Messaging, getMessaging } from "firebase/messaging";
 import { Usuarios } from "../Usuarios";
 import { Chats } from "../Chats";
 import { Mensajes } from "../Mensajes";
@@ -27,6 +28,7 @@ export class FirebaseBD implements BD {
 
     private app = initializeApp(this.config, "HasbullApp");
     private db: Firestore = getFirestore(this.app);
+    private messaging: Messaging = getMessaging(this.app);
     private userCollection = collection(this.db, 'Usuarios');
     private chatCollection = collection(this.db, 'Chats');
 
