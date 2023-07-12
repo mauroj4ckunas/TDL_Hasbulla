@@ -11,15 +11,17 @@ import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import NingunChatAbierto from './NingunChatAbierto';
 import AgregarContacto from './AgregarContacto';
 import CerrarSesion from './CerrarSesion';
+import { BD } from '../classes/BDconfig/BD';
 
 interface Props {
   usuarioLogueado: Usuarios,
+  bd: BD,
+  desloguear: () => void
 }
 
-export default function Wordspace({usuarioLogueado}: Props) {
+export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
 
-  const db: FirebaseBD = new FirebaseBD();
-  let chats: Chats[] = useObtenerTodosLosChats(usuarioLogueado.username, db)
+  let chats: Chats[] = useObtenerTodosLosChats(usuarioLogueado.username, bd)
 
   const contactoInicial = {
     username: "",
@@ -63,7 +65,7 @@ export default function Wordspace({usuarioLogueado}: Props) {
   const listaDeContactos = chats.map((chat, index) => {
     return (
       <li className="gap-x-6 py-3" key={index}>
-        <ContactoChat chat={chat} db={db} usuarioLogueado={usuarioLogueado} seleccionarChat={seleccionarChat} />
+        <ContactoChat chat={chat} bd={bd} usuarioLogueado={usuarioLogueado} seleccionarChat={seleccionarChat} />
       </li>
     );
   });
@@ -86,7 +88,7 @@ export default function Wordspace({usuarioLogueado}: Props) {
 
   const cerrarSesion = () => {
     handlerCerrarModalCerrarSesion();
-    console.log('Sesion cerrada')
+    desloguear();
   }
 
 
@@ -105,7 +107,7 @@ export default function Wordspace({usuarioLogueado}: Props) {
         { 
         chatAbierto 
           ?
-          <ChatAbierto chat={chatSeleccionado} usuarioLogueado={usuarioLogueado} contacto={contacto} db={db} />
+          <ChatAbierto chat={chatSeleccionado} usuarioLogueado={usuarioLogueado} contacto={contacto} bd={bd} />
           :
           <NingunChatAbierto/>
         }

@@ -5,27 +5,28 @@ import { faShare, faBars, faImage, faLocationDot, faXmark } from '@fortawesome/f
 import { MensajeEnviado, MensajeRecibido } from './Mensaje';
 import { Mensajes } from '../classes/Mensajes';
 import { Usuarios } from '../classes/Usuarios';
-import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import { Chats } from '../classes/Chats';
 import { SpeedDial, SpeedDialAction } from '@mui/material';
 import EnviarImagen from './EnviarImagen';
 import EnviarUbicacion from './EnviarUbicacion';
 import MapaUbicacionActual from './MapaUbicacionActual';
+import { BD } from '../classes/BDconfig/BD';
+
 interface Props {
     chat: Chats,
     usuarioLogueado: Usuarios,
     contacto: Usuarios,
-    db: FirebaseBD,
+    bd: BD,
 }
 
-export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props){
+export default function ChatAbierto({chat, usuarioLogueado, contacto, bd}: Props){
 
     const [mensajesMostrados, setMensajesMostrados] = useState<Mensajes[]>([]);
     const [idMensajes, setIdMensajes] = useState<number>(0);
 
     useEffect(() => {
         const getFetch = async () => {
-          const resp = await db.ObtenerTodosLosMensajes(chat.idChat);
+          const resp = await bd.ObtenerTodosLosMensajes(chat.idChat);
           setMensajesMostrados(ordenarPorId(resp));
           setIdMensajes(resp.length);
 
@@ -114,7 +115,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, db}: Props
     }
 
     const guardarEnBD = async () => {
-        await db.GuardarMensaje(chat.idChat, mensaje);
+        await bd.GuardarMensaje(chat.idChat, mensaje);
     };
 
     const [modalImagen, setModalImagen] = useState<boolean>(false);

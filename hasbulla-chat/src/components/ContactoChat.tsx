@@ -1,22 +1,21 @@
 import React from 'react';
 import { Chats } from '../classes/Chats';
 import { Usuarios } from '../classes/Usuarios';
-import { Mensajes } from '../classes/Mensajes';
-import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import { useObtenerUltimoMensaje, useObtenerUsuario } from '../classes/HooksFetch';
+import { BD } from '../classes/BDconfig/BD';
 
 interface Props {
     chat: Chats,
-    db: FirebaseBD,
+    bd: BD,
     usuarioLogueado: Usuarios
     seleccionarChat: (contactoElegido: Usuarios, chatSeleccionado: Chats) => void
 }
 
-export default function ContactoChat({chat, db, usuarioLogueado, seleccionarChat}: Props){
+export default function ContactoChat({chat, bd, usuarioLogueado, seleccionarChat}: Props){
     
-    const ultimoMensaje = useObtenerUltimoMensaje(chat.idChat, db);
+    const ultimoMensaje = useObtenerUltimoMensaje(chat.idChat, bd);
     const usernameContacto = chat.usuarioParticipante1 === usuarioLogueado.username ? chat.usuarioParticipante2 : chat.usuarioParticipante1;
-    const c: Usuarios | null = useObtenerUsuario(usernameContacto, db);
+    const c: Usuarios | null = useObtenerUsuario(usernameContacto, bd);
     const contacto: Usuarios = c !== null ? c : {nombre: "No se encontro al contacto", username: "", contrasena: ""}
     
     return (

@@ -10,11 +10,9 @@ export default function AppChat() {
 
   const db: BD = new FirebaseBD();
 
-  const [usernameALoguear, setUsernameALoguear] = useState<{username: string, contrasena:string}>();
   const [logueado, setLogueado] = useState<Usuarios>();
 
   const login = ({ username, contrasena }: {username: string, contrasena: string}) => {
-    setUsernameALoguear({username, contrasena})
     db.Login(username, contrasena)
       .then(log => {
         if(log){
@@ -39,12 +37,13 @@ export default function AppChat() {
   }
   
   const loguearAUsuario = (usuario: Usuarios) => setLogueado(usuario);
+  const desloguearAUsuario = () => setLogueado(undefined)
+
 
   return (
-
     <>
     {
-      logueado ? <Wordspace usuarioLogueado={logueado}/> 
+      logueado ? <Wordspace usuarioLogueado={logueado} bd={db} desloguear={desloguearAUsuario}/> 
                : <LoginRegister login={login} register={register} loguearAUsuario={loguearAUsuario}/>
     }
     </>
