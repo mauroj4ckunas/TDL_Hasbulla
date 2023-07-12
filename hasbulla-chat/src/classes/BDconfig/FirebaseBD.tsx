@@ -33,16 +33,15 @@ export class FirebaseBD implements BD {
     private chatCollection = collection(this.db, 'Chats');
 
     public async VerSiUsuarioExisteEnBD(username: string): Promise<boolean> {
-        const userRef = doc(this.db, "Usuarios", username);
+        const userRef = doc(this.userCollection, username);
         const userSnap = await getDoc(userRef);
         return userSnap.exists();
     }
 
     public async CrearUsuario(nuevoUsuario: Usuarios): Promise<boolean>  {
         const existe: boolean = await this.VerSiUsuarioExisteEnBD(nuevoUsuario.username);
-        if (existe) {
-            alert("El usuario ingresado ya existe, intente con otro");
-        } else {
+        console.log(nuevoUsuario)
+        if (!existe) {
             await setDoc(doc(this.db, 'Usuarios', nuevoUsuario.username), nuevoUsuario);
         }
         return existe;
@@ -137,13 +136,17 @@ export class FirebaseBD implements BD {
         return mensajes
     }
 
-    public async Login(username: string, contrasena: string): Promise<boolean> {
+    public async Login(username: string, contrasena: string): Promise<Usuarios | null> {
         const userRef = doc(this.userCollection, username);
         const userSnap = await getDoc(userRef);
-        if (userSnap.exists()) {
-            return userSnap.data().contrasena === contrasena;
+        if (userSnap.exists() && userSnap.data().contrasena === contrasena) {
+            return {
+                username: userSnap.data().username,
+                nombre: userSnap.data().nombre,
+                contrasena: userSnap.data().contrasena,
+            };
         }
-        return false;
+        return null;
     }
 
     public async UltimoIdDeChats(): Promise<number> {

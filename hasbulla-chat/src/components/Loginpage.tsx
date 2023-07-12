@@ -23,7 +23,7 @@ export default function LoginPage({login}: Props){
     }
 
     return(
-        <form className="formulario">
+        <div className="formulario">
         <h1>Iniciar Sesión</h1>
         <div className="contenedor">
             <div className="input-contenedor">
@@ -39,6 +39,6 @@ export default function LoginPage({login}: Props){
             <button type="submit" className="button" onClick={() => {logear()}}>Iniciar sesion</button>
             <p className=" text-center mt-2">No tienes una cuenta? <Link to='/register' className="text-blue-950 hover:text-blue-300 underline decoration-blue-950 hover:decoration-blue-300">Click aquí</Link></p>
             </div>
-       </form>
+       </div>
     );
 }

@@ -7,7 +7,7 @@ export interface BD {
     VerSiUsuarioExisteEnBD(username: string): Promise<boolean>;
     CrearUsuario(nuevoUsuario: Usuarios): Promise<boolean>;
     ObtenerUsuario(username: string): Promise<Usuarios | null>;
-    Login(username: string, contrasena: string): Promise<boolean>;
+    Login(username: string, contrasena: string): Promise<Usuarios | null>;
     CrearChat(idChat: number, usuarioLogueado: string, usuarioParticipe: string): Promise<void>;
     GuardarMensaje(idChat: number, mensaje: Mensajes): Promise<void>;
     ObtenerTodosLosChats(userName: string): Promise<Chats[]>;

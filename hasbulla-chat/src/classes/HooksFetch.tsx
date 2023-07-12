@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FirebaseBD } from './BDconfig/FirebaseBD';
+import { BD } from './BDconfig/BD';
 import { Usuarios } from './Usuarios';
 import { Mensajes } from './Mensajes';
 import { Chats } from './Chats';
 
-export const useUsuarioExistente = (username: string, db: FirebaseBD): boolean => {
+export const useUsuarioExistente = (username: string, db: BD): boolean => {
     const [existe, setExiste] = useState<boolean>(false)
     useEffect(() => {
         const getFetch = async () => {
@@ -17,7 +17,7 @@ export const useUsuarioExistente = (username: string, db: FirebaseBD): boolean =
     return existe;
 }
 
-export const useCrearUsuario = (nuevoUsuario: Usuarios, db: FirebaseBD): boolean => {
+export const useCrearUsuario = (nuevoUsuario: Usuarios, db: BD): boolean => {
     const [seCreo, setSeCreo] = useState<boolean>(false)
     useEffect(() => {
         const getFetch = async () => {
@@ -30,7 +30,7 @@ export const useCrearUsuario = (nuevoUsuario: Usuarios, db: FirebaseBD): boolean
     return seCreo;
 }
 
-export const useObtenerUsuario = (username: string, db: FirebaseBD): Usuarios | null => {
+export const useObtenerUsuario = (username: string, db: BD): Usuarios | null => {
     const [usuario, setUsuario] = useState<Usuarios | null>({
         username: "",
         nombre: "",
@@ -47,20 +47,20 @@ export const useObtenerUsuario = (username: string, db: FirebaseBD): Usuarios | 
     return usuario;
 }
 
-export const useLogin = (username: string, contrasena: string, db: FirebaseBD): boolean => {
-    const [login, setLogin] = useState<boolean>(false)
-    useEffect(() => {
-        const getFetch = async () => {
-          const resp = await db.Login(username, contrasena);
-          setLogin(resp);
-        };
-        getFetch();
-    }, []);
+// export const useLogin = (username: string, contrasena: string, db: BD): boolean => {
+//     const [login, setLogin] = useState<boolean>(false)
+//     useEffect(() => {
+//         const getFetch = async () => {
+//           const resp = await db.Login(username, contrasena);
+//           setLogin(resp);
+//         };
+//         getFetch();
+//     }, []);
     
-    return login;
-}
+//     return login;
+// }
 
-export const useCrearChat = (idChat: number, usuarioLogueado: string, usuarioParticipe: string, db: FirebaseBD) => {
+export const useCrearChat = (idChat: number, usuarioLogueado: string, usuarioParticipe: string, db: BD) => {
     useEffect(() => {
         const getFetch = async () => {
           await db.CrearChat(idChat, usuarioLogueado, usuarioParticipe)
@@ -69,7 +69,7 @@ export const useCrearChat = (idChat: number, usuarioLogueado: string, usuarioPar
     }, []);
 }
 
-export const useGuardarMensaje = (idChat: number, mensaje: Mensajes, db: FirebaseBD) => {
+export const useGuardarMensaje = (idChat: number, mensaje: Mensajes, db: BD) => {
     useEffect(() => {
         const getFetch = async () => {
           await db.GuardarMensaje(idChat, mensaje);
@@ -78,7 +78,7 @@ export const useGuardarMensaje = (idChat: number, mensaje: Mensajes, db: Firebas
     }, [mensaje]);
 }
 
-export const useObtenerTodosLosChats = (userName: string, db: FirebaseBD): Chats[] => {
+export const useObtenerTodosLosChats = (userName: string, db: BD): Chats[] => {
     const [chats, setChats] = useState<Chats[]>([])
     useEffect(() => {
         const getFetch = async () => {
@@ -91,7 +91,7 @@ export const useObtenerTodosLosChats = (userName: string, db: FirebaseBD): Chats
     return chats;
 }
 
-export const useObtenerTodosLosMensajes = (idChat: number, db: FirebaseBD): Mensajes[] => {
+export const useObtenerTodosLosMensajes = (idChat: number, db: BD): Mensajes[] => {
     const [mensajes, setMensajes] = useState<Mensajes[]>([])
     
     useEffect(() => {
@@ -106,7 +106,7 @@ export const useObtenerTodosLosMensajes = (idChat: number, db: FirebaseBD): Mens
     return mensajes;
 }
 
-export const useObtenerUltimoMensaje = (idChat: number, db: FirebaseBD): Mensajes => {
+export const useObtenerUltimoMensaje = (idChat: number, db: BD): Mensajes => {
     const [mensaje, setMensaje] = useState<Mensajes>({
         idMensaje: -1,
         texto: "",
@@ -128,7 +128,7 @@ export const useObtenerUltimoMensaje = (idChat: number, db: FirebaseBD): Mensaje
     return mensaje;
 }
 
-export const useUltimoIdDeChats = (db: FirebaseBD): number => {
+export const useUltimoIdDeChats = (db: BD): number => {
     const [cantChats, setCantChats] = useState<number>(0)
     useEffect(() => {
         const getFetch = async () => {
