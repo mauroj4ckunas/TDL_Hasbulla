@@ -4,7 +4,7 @@ import Login from "./components/Loginpage";
 import { BD } from "./classes/BDconfig/BD";
 import { FirebaseBD } from "./classes/BDconfig/FirebaseBD";
 import { Usuarios } from "./classes/Usuarios";
-import LoginRegister from "./components/LoginRegister";
+import AppRouter from "./components/router";
 
 export default function AppChat() {
 
@@ -44,7 +44,7 @@ export default function AppChat() {
     <>
     {
       logueado ? <Wordspace usuarioLogueado={logueado} bd={db} desloguear={desloguearAUsuario}/> 
-               : <LoginRegister login={login} register={register} loguearAUsuario={loguearAUsuario}/>
+               : <AppRouter login={login} register={register}/>
     }
     </>
   );
