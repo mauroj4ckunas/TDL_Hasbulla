@@ -56,7 +56,8 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     const escucharMensajes = async (idChat: number) => {
         await onSnapshot(collection(doc(bd.getBD(), "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
             let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length - 1].data()
-            if (response.usuarioEmisor !== usuarioLogueado.username) {
+
+            if (!(response.idMensaje !== mensaje.idMensaje)) {
                 setIdMensajes(idMensajes + 1);
                 setMensajeRecibido({
                     idMensaje: response.idMensaje + 1,
@@ -118,11 +119,13 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     }, [mensajesMostrados]);
 
     const agregarComponenteMensaje = () => {
+        console.log("Entra en agregarComponenteMensaje")
         setMensajesMostrados([...mensajesMostrados, mensaje])
     };
 
     const agregarComponenteMensajeRecibido = () => {
-        if (mensajeRecibido) {
+        console.log("Entra en agregarComponenteMensajeRecibido")
+        if (mensajeRecibido ) {
             setMensajesMostrados([...mensajesMostrados, mensajeRecibido])
             setMensajeRecibido(undefined);
         }
