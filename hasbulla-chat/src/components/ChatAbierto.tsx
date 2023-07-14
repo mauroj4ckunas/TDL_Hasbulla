@@ -116,7 +116,9 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     }, [mensajesMostrados]);
 
     const agregarComponenteMensaje = () => {
-        setMensajesMostrados([...mensajesMostrados, mensaje])
+        if (mensajeRecibido && mensaje.idMensaje !== mensajeRecibido.idMensaje) {
+            setMensajesMostrados([...mensajesMostrados, mensaje])
+        }
     };
 
     const agregarComponenteMensajeRecibido = () => {
