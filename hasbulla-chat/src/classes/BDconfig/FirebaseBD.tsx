@@ -164,5 +164,4 @@ export class FirebaseBD implements BD {
                     .then((response) => response.docs.length)
                     .catch((error) => 0);
     }
-
 }
