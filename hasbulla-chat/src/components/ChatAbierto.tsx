@@ -30,7 +30,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     const [coordenadas, setCoordenadas] = useState<number[]>([]);
 
     const mensajeInicial: Mensajes = {
-        idMensaje: -1,
+        idMensaje: 0,
         texto: "",
         usuarioEmisor: usuarioLogueado.username,
         usuarioReceptor: contacto.username,
@@ -116,13 +116,10 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     }, [mensajesMostrados]);
 
     const agregarComponenteMensaje = () => {
-        if (mensajeRecibido && mensaje.idMensaje !== mensajeRecibido.idMensaje) {
-            setMensajesMostrados([...mensajesMostrados, mensaje])
-        }
+        setMensajesMostrados([...mensajesMostrados, mensaje])
     };
 
     const agregarComponenteMensajeRecibido = () => {
-        console.log(mensajeRecibido && mensaje.idMensaje !== mensajeRecibido.idMensaje)
         if (mensajeRecibido) {
             setMensajesMostrados([...mensajesMostrados, mensajeRecibido])
         }
