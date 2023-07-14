@@ -12,6 +12,7 @@ import EnviarUbicacion from './EnviarUbicacion';
 import MapaUbicacionActual from './MapaUbicacionActual';
 import { BD } from '../classes/BDconfig/BD';
 
+
 interface Props {
     chat: Chats,
     usuarioLogueado: Usuarios,
@@ -26,14 +27,14 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, bd}: Props
 
     useEffect(() => {
         const getFetch = async () => {
-          const resp = await bd.ObtenerTodosLosMensajes(chat.idChat);
-          setMensajesMostrados(ordenarPorId(resp));
-          setIdMensajes(resp.length);
-
+            const resp = await bd.ObtenerTodosLosMensajes(chat.idChat);
+            setMensajesMostrados(ordenarPorId(resp));
+            setIdMensajes(resp.length);
         };
-
+        bd.EscucharMensajes(chat.idChat);
         getFetch();
     }, [chat]);
+
 
     const ordenarPorId = (array: Mensajes[]): Mensajes[] => {
         return array.sort((a, b) => a.idMensaje - b.idMensaje);

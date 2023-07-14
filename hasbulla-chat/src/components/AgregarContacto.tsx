@@ -14,6 +14,9 @@ interface Props {
 
 export default function AgregarContacto({show, cerrarModal, agregarContacto}: Props){
 
+    
+
+
     return <>
         <div>
         <Dialog open={show} onClose={cerrarModal}>

@@ -13,5 +13,6 @@ export interface BD {
     ObtenerTodosLosChats(userName: string): Promise<Chats[]>;
     ObtenerTodosLosMensajes(idChat: number): Promise<Mensajes[]>;
     UltimoIdDeChats(): Promise<number>;
+    EscucharMensajes(idChat: number): Promise<void>;
 }
 

@@ -1,10 +1,10 @@
-import { Firestore, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, where } from "firebase/firestore/lite";
+import { Firestore, doc, getDoc, getDocs, getFirestore, query, setDoc, where, onSnapshot, collection } from "firebase/firestore";
 import { BD } from "./BD";
 import { initializeApp } from "firebase/app";
-import { Messaging, getMessaging } from "firebase/messaging";
 import { Usuarios } from "../Usuarios";
 import { Chats } from "../Chats";
 import { Mensajes } from "../Mensajes";
+
 
 export class FirebaseBD implements BD {
     // readonly config = {
@@ -28,7 +28,6 @@ export class FirebaseBD implements BD {
 
     private app = initializeApp(this.config, "HasbullApp");
     private db: Firestore = getFirestore(this.app);
-    private messaging: Messaging = getMessaging(this.app);
     private userCollection = collection(this.db, 'Usuarios');
     private chatCollection = collection(this.db, 'Chats');
 
@@ -40,7 +39,6 @@ export class FirebaseBD implements BD {
 
     public async CrearUsuario(nuevoUsuario: Usuarios): Promise<boolean>  {
         const existe: boolean = await this.VerSiUsuarioExisteEnBD(nuevoUsuario.username);
-        console.log(nuevoUsuario)
         if (!existe) {
             await setDoc(doc(this.db, 'Usuarios', nuevoUsuario.username), nuevoUsuario);
         }
@@ -62,6 +60,17 @@ export class FirebaseBD implements BD {
 
     public async CrearChat(idChat: number, usuarioLogueado: string, usuarioParticipe: string): Promise<void> {
         const docNuevoChat = doc(this.chatCollection, idChat.toString());
+        const mensajesCollection = collection(docNuevoChat, 'Mensajes');
+        const mensajesDoc = doc(mensajesCollection, '-1');
+        await setDoc(mensajesDoc, {
+            idMensaje: -1,
+            texto: '',
+            usuarioEmisor: '',
+            usuarioReceptor: '',
+            imagen: '',
+            coordenadas: '',
+            fechaDeEnvio: '',
+        })
         await setDoc(docNuevoChat, {
             idChat: idChat,
             usuarioLogueado: usuarioLogueado,
@@ -153,5 +162,13 @@ export class FirebaseBD implements BD {
         return await getDocs(this.chatCollection)
                     .then((response) => response.docs.length)
                     .catch((error) => 0);
+    }
+
+    public async EscucharMensajes(idChat: number) {
+        let ultimoMsj;
+        onSnapshot(collection(doc(this.db, "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
+            console.log(querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data())
+
+        });
     }
 }
