@@ -58,7 +58,7 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, bd}: Props
             let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
             setIdMensajes(idMensajes+1);
             setMensajeRecibido({
-                idMensaje: response.idMensaje,
+                idMensaje: response.idMensaje+1,
                 texto: response.texto,
                 usuarioEmisor: response.usuarioEmisor,
                 usuarioReceptor: response.usuarioReceptor,
