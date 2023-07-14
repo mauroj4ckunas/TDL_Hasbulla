@@ -77,7 +77,6 @@ export class FirebaseBD implements BD {
             usuarioParticipe: usuarioParticipe,
         })
     }
-
     public async GuardarMensaje(idChat: number, mensaje: Mensajes): Promise<void> {
         const docChat = doc(this.chatCollection, idChat.toString());
         const mensajesCollection = collection(docChat, 'Mensajes');

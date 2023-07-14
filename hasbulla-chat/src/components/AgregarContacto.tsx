@@ -5,43 +5,45 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import agregarContacto1 from './Wordspace'
+import { Usuarios } from '../classes/Usuarios';
+import { ChangeEvent, useState } from 'react';
 
 interface Props {
     cerrarModal: () => void,
-    agregarContacto: () => void,
+    agregarContacto: (usuario: string) => void,
     show: boolean,
 }
-
-export default function AgregarContacto({show, cerrarModal, agregarContacto}: Props){
-
-    
-
-
-    return <>
+export default function AgregarContacto({ show, cerrarModal, agregarContacto }: Props) {
+    const [username, setUsername] = useState('');
+  
+    const handleChange = (event:ChangeEvent<HTMLInputElement>) => {
+      setUsername(event.target.value);
+    };
+  
+    const handleAgregarContacto = () => {
+      agregarContacto(username);
+      setUsername(''); 
+    };
+  
+    return (
+      <>
         <div>
-        <Dialog open={show} onClose={cerrarModal}>
-            <DialogTitle className=''>Buscar contacto</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Para agregar, debe poner el nombre de usuario de la persona.
-                    En caso de que exista se agregará automáticamente.
-                </DialogContentText>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    id="username"
-                    label="Escribir nombre de usuario"
-                    type="emusernameail"
-                    fullWidth
-                    variant="standard"
-                />
-            </DialogContent>
-            <DialogActions>
-            <Button onClick={cerrarModal}>Cancelar</Button>
-            <Button onClick={agregarContacto}>Agregar usuario</Button>
-            </DialogActions>
-        </Dialog>
+          <Dialog open={show} onClose={cerrarModal}>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="username"
+              label="Escribir nombre de usuario"
+              type="email"
+              fullWidth
+              variant="standard"
+              value={username} 
+              onChange={handleChange} 
+            />
+            <Button onClick={handleAgregarContacto}>Agregar usuario</Button>
+          </Dialog>
         </div>
-    </>
-
-}
+      </>
+    );
+  }

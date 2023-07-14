@@ -6,12 +6,13 @@ import TituloChats from './TituloChats';
 import ContactoChat from './ContactoChat';
 import { Usuarios } from '../classes/Usuarios';
 import { Chats } from '../classes/Chats';
-import { useObtenerTodosLosChats } from '../classes/HooksFetch';
+import { useObtenerTodosLosChats, useUltimoIdDeChats } from '../classes/HooksFetch';
 import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
 import NingunChatAbierto from './NingunChatAbierto';
 import AgregarContacto from './AgregarContacto';
 import CerrarSesion from './CerrarSesion';
 import { BD } from '../classes/BDconfig/BD';
+import { updateLiteralTypeNode } from 'typescript';
 
 interface Props {
   usuarioLogueado: Usuarios,
@@ -61,7 +62,18 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
     setChatSeleccionado(chatElegido)
     setChatAbierto(true);
   }
-
+  const agendarContacto1 = (contacto: string) => {
+    bd.ObtenerUsuario(contacto).then(usuario => {
+      if (usuario){
+        bd.UltimoIdDeChats().then(idChats => bd.CrearChat(idChats + 1,usuarioLogueado.username,contacto))
+      } else {
+        alert("Error al agendar usuario")
+      }
+    } 
+    )
+  }
+                                       
+ 
   const listaDeContactos = chats.map((chat, index) => {
     return (
       <li className="gap-x-6 py-3" key={index}>
@@ -76,7 +88,8 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
 
   const handlerCerrarModalContacto = () => setModalContacto(false);
 
-  const agendarContacto = () => {
+  const agendarContacto = (usuario: string) => {
+    agendarContacto1(usuario);
     handlerCerrarModalContacto();
   }
 
