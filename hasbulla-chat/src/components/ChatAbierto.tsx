@@ -79,45 +79,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
 
     const inputTextRef = useRef<HTMLInputElement | null>(null);
     const divRepoMensajesRef = useRef<HTMLDivElement | null>(null);
-
-    useEffect(() => {
-        const getFetch = async () => {
-            const resp = await bd.ObtenerTodosLosMensajes(chat.idChat);
-            setMensajesMostrados(ordenarPorId(resp));
-            setIdMensajes(resp.length);
-        };
-        escucharMensajes(chat.idChat)
-        getFetch();
-    }, [chat]);
-
-
-    const escucharMensajes = async (idChat: number) => {
-        await onSnapshot(collection(doc(bd.getBD(), "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
-            let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length - 1].data()
-
-            if (!(response.idMensaje !== mensaje.idMensaje)) {
-                setIdMensajes(idMensajes + 1);
-                setMensajeRecibido({
-                    idMensaje: response.idMensaje + 1,
-                    texto: response.texto,
-                    usuarioEmisor: response.usuarioEmisor,
-                    usuarioReceptor: response.usuarioReceptor,
-                    fechaDeEnvio: response.fechaDeEnvio,
-                    imagen: response.imagen,
-                    coordenadas: response.coordenadas,
-                })
-            }
-        });
-    }
-
-
-    const ordenarPorId = (array: Mensajes[]): Mensajes[] => {
-        return array.sort((a, b) => a.idMensaje - b.idMensaje);
-    }
-
-    const inputTextRef = useRef<HTMLInputElement | null>(null);
-    const divRepoMensajesRef = useRef<HTMLDivElement | null>(null);
-
+    
     const getFechaActual = () => {
         const e = new Date();
         return e.toLocaleDateString();
