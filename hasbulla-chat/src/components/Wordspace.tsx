@@ -11,6 +11,7 @@ import NingunChatAbierto from './NingunChatAbierto';
 import AgregarContacto from './AgregarContacto';
 import CerrarSesion from './CerrarSesion';
 import { BD } from '../classes/BDconfig/BD';
+import { collection, doc, onSnapshot } from 'firebase/firestore';
 
 interface Props {
   usuarioLogueado: Usuarios,
@@ -38,13 +39,29 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   const [chatAbierto, setChatAbierto] = useState<boolean>(false);
   const [listaDeChats, setListaDeChats] = useState<Chats[]>([]);
 
+  
   useEffect(() => {
     bd.ObtenerTodosLosChats(usuarioLogueado.username)
       .then(chats => {
         setListaDeChats(chats);
+        escucharMensajes();
       })
       .catch(error => alert("Fallo al cargar los chats del usuario."))
   }, []);
+
+  const escucharMensajes = async () => {
+    await onSnapshot(collection(bd.getBD(), 'Chats'), (querySnapshot) => {
+        let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
+        if(response.usuarioParticipante2 === usuarioLogueado.username){
+            const nuevoChat: Chats = {
+              idChat: response.idChats + 1,
+              usuarioParticipante1: response.usuarioParticipante1,
+              usuarioParticipante2: response.usuarioParticipante2,
+            }
+            setListaDeChats([...listaDeChats, nuevoChat]);
+        }
+    });
+}
 
   useEffect(() => {
     if (contacto !== contactoInicial) {
