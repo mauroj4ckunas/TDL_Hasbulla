@@ -119,7 +119,6 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     }, [mensajesMostrados]);
 
     const agregarComponenteMensaje = () => {
-        console.log("Entra en agregarComponenteMensaje")
         setMensajesMostrados([...mensajesMostrados, mensaje])
     };
 

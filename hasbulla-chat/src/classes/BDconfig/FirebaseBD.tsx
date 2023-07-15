@@ -96,25 +96,30 @@ export class FirebaseBD implements BD {
         let chats: Chats[] = [];
         const query1 = query(this.chatCollection, where("usuarioParticipante1", "==", userName));
         const querySnapshot1 = await getDocs(query1);
-        querySnapshot1.forEach((chat) => {
-            chats.push({
-                idChat: chat.data().idChat,
-                usuarioParticipante1: chat.data().usuarioParticipante1,
-                usuarioParticipante2: chat.data().usuarioParticipante2,
-            })
-        });
+        if (querySnapshot1.docs.length > 0) {
+            querySnapshot1.forEach((chat) => {
+                chats.push({
+                    idChat: chat.data().idChat,
+                    usuarioParticipante1: chat.data().usuarioParticipante1,
+                    usuarioParticipante2: chat.data().usuarioParticipante2,
+                })
+            });
+        }
 
         const query2 = query(this.chatCollection, where("usuarioParticipante2", "==", userName));
         const querySnapshot2 = await getDocs(query2);
-        querySnapshot2.forEach((chat) => {
-            chats.push({
-                idChat: chat.data().idChat,
-                usuarioParticipante1: chat.data().usuarioParticipante1,
-                usuarioParticipante2: chat.data().usuarioParticipante2,
-            })
-        });
+        if (querySnapshot2.docs.length > 0) {
+            querySnapshot2.forEach((chat) => {
+                chats.push({
+                    idChat: chat.data().idChat,
+                    usuarioParticipante1: chat.data().usuarioParticipante1,
+                    usuarioParticipante2: chat.data().usuarioParticipante2,
+                })
+            });
+        }
 
-        return chats.sort((a, b) => b.idChat - a.idChat);
+        
+        return chats.length > 0 ? chats.sort((a, b) => b.idChat - a.idChat) : [];
     }
 
     public async ObtenerTodosLosChats(userName: string): Promise<Chats[]> {

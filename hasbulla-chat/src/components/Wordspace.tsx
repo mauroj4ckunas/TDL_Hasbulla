@@ -51,6 +51,7 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
 
   const escucharMensajes = async () => {
     await onSnapshot(collection(bd.getBD(), 'Chats'), (querySnapshot) => {
+      if (querySnapshot.docs.length > 0) {
         let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
         if(response.usuarioParticipante2 === usuarioLogueado.username){
             const nuevoChat: Chats = {
@@ -60,6 +61,7 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
             }
             setListaDeChats([...listaDeChats, nuevoChat]);
         }
+      }
     });
 }
 
