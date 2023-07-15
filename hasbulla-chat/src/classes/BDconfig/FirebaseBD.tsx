@@ -1,4 +1,4 @@
-import { Firestore, doc, getDoc, getDocs, getFirestore, query, setDoc, where, onSnapshot, collection } from "firebase/firestore";
+import { Firestore, doc, getDoc, getDocs, getFirestore, query, setDoc, where, onSnapshot, collection, Unsubscribe } from "firebase/firestore";
 import { BD } from "./BD";
 import { initializeApp } from "firebase/app";
 import { Usuarios } from "../Usuarios";
@@ -125,7 +125,8 @@ export class FirebaseBD implements BD {
     private async obtenerMensajesSegunElChat(idChat: number): Promise<Mensajes[]> {
         let mensajes: Mensajes[] = [];
         const queryResponse = await getDocs(collection(this.db, "Chats", idChat.toString(), "Mensajes"));
-        queryResponse.forEach((msj) => {
+        const queryResponseOrdenado = queryResponse.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje));
+        queryResponseOrdenado.forEach((msj) => {
             mensajes.push({
                 idMensaje: msj.data().idMensaje,
                 texto: msj.data().texto,
@@ -164,10 +165,21 @@ export class FirebaseBD implements BD {
     }
 
     public async EscucharMensajes(idChat: number) {
-        let ultimoMsj;
-        onSnapshot(collection(doc(this.db, "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
-            console.log(querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data())
-
+        let ultimoMensaje: Unsubscribe ;
+        let msj: Mensajes;
+        ultimoMensaje = await onSnapshot(collection(doc(this.db, "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
+            let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
+            msj = {
+                idMensaje: response.idMensaje,
+                texto: response.texto,
+                usuarioEmisor: response.usuarioEmisor,
+                usuarioReceptor: response.usuarioReceptor,
+                fechaDeEnvio: response.fechaDeEnvio,
+                imagen: response.imagen,
+                coordenadas: response.coordenadas,
+            }
         });
     }
+
+    public getBD() {return this.db;}
 }

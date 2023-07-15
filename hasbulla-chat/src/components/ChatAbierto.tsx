@@ -11,6 +11,7 @@ import EnviarImagen from './EnviarImagen';
 import EnviarUbicacion from './EnviarUbicacion';
 import MapaUbicacionActual from './MapaUbicacionActual';
 import { BD } from '../classes/BDconfig/BD';
+import { onSnapshot, collection, Unsubscribe, doc } from "firebase/firestore";
 
 
 interface Props {
@@ -24,25 +25,9 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, bd}: Props
 
     const [mensajesMostrados, setMensajesMostrados] = useState<Mensajes[]>([]);
     const [idMensajes, setIdMensajes] = useState<number>(0);
-
-    useEffect(() => {
-        const getFetch = async () => {
-            const resp = await bd.ObtenerTodosLosMensajes(chat.idChat);
-            setMensajesMostrados(ordenarPorId(resp));
-            setIdMensajes(resp.length);
-        };
-        bd.EscucharMensajes(chat.idChat);
-        getFetch();
-    }, [chat]);
-
-
-    const ordenarPorId = (array: Mensajes[]): Mensajes[] => {
-        return array.sort((a, b) => a.idMensaje - b.idMensaje);
-    }
-
-
-    const inputTextRef = useRef<HTMLInputElement | null>(null);
-    const divRepoMensajesRef = useRef<HTMLDivElement | null>(null);
+    const [texto, setTexto] = useState("");
+    const [base64, setBase64] = useState("");
+    const [coordenadas, setCoordenadas] = useState<number[]>([]);
 
     const mensajeInicial: Mensajes = {
         idMensaje: -1,
@@ -54,10 +39,46 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, bd}: Props
         fechaDeEnvio: "",
     }
 
-    const [texto, setTexto] = useState("");
-    const [base64, setBase64] = useState("");
-    const [coordenadas, setCoordenadas] = useState<number[]>([]);
     const [mensaje, setMensaje] = useState<Mensajes>(mensajeInicial);
+    const [mensajeRecibido, setMensajeRecibido] = useState<Mensajes>();
+
+    useEffect(() => {
+        const getFetch = async () => {
+            const resp = await bd.ObtenerTodosLosMensajes(chat.idChat);
+            setMensajesMostrados(ordenarPorId(resp));
+            setIdMensajes(resp.length);
+        };
+        escucharMensajes(chat.idChat)
+        getFetch();
+    }, [chat]);
+
+
+    const escucharMensajes = async (idChat: number) => {
+        await onSnapshot(collection(doc(bd.getBD(), "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
+            let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
+            if(response.usuarioReceptor === usuarioLogueado.username){
+                setIdMensajes(response.idMensaje);
+                const msjRecibido: Mensajes = {
+                    idMensaje: response.idMensaje,
+                    texto: response.texto,
+                    usuarioEmisor: response.usuarioEmisor,
+                    usuarioReceptor: response.usuarioReceptor,
+                    fechaDeEnvio: response.fechaDeEnvio,
+                    coordenadas: response.coordenadas,
+                    imagen: response.imagen,
+                }
+                setMensajeRecibido(msjRecibido);
+            }
+        });
+    }
+
+
+    const ordenarPorId = (array: Mensajes[]): Mensajes[] => {
+        return array.sort((a, b) => a.idMensaje - b.idMensaje);
+    }
+
+    const inputTextRef = useRef<HTMLInputElement | null>(null);
+    const divRepoMensajesRef = useRef<HTMLDivElement | null>(null);
 
     const getFechaActual = () =>{
         const e = new Date();
@@ -87,6 +108,11 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, bd}: Props
     }, [mensaje]);
 
     useEffect(() => {
+        setMensajeRecibido(mensajeRecibido);
+        agregarComponenteMensajeRecibido();
+    }, [mensajeRecibido]);
+
+    useEffect(() => {
         if (divRepoMensajesRef.current) {
             divRepoMensajesRef.current.scrollTop = divRepoMensajesRef.current?.scrollHeight;
         }
@@ -96,8 +122,15 @@ export default function ChatAbierto({chat, usuarioLogueado, contacto, bd}: Props
         setMensajesMostrados([...mensajesMostrados, mensaje])
     };
 
+    const agregarComponenteMensajeRecibido = () => {
+        if(mensajeRecibido && mensajesMostrados[mensajesMostrados.length-1].idMensaje !== mensajeRecibido.idMensaje){
+            setMensajesMostrados([...mensajesMostrados, mensajeRecibido])
+        }
+    };
+
     const enviarMensaje = () => {
         if (texto !== '' || (texto === '' && base64) || (texto === '' && coordenadas)) {
+            
             setMensaje((prevMensaje) => ({
                 ...prevMensaje,
                 texto: texto,

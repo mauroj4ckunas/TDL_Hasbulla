@@ -62,7 +62,7 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
     setChatSeleccionado(chatElegido)
     setChatAbierto(true);
   }
-  const agendarContacto1 = (contacto: string) => {
+  const guardarContactoEnBD = (contacto: string) => {
     bd.ObtenerUsuario(contacto).then(usuario => {
       if (usuario){
         bd.UltimoIdDeChats().then(idChats => bd.CrearChat(idChats + 1,usuarioLogueado.username,contacto))
@@ -71,8 +71,7 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
       }
     } 
     )
-  }
-                                       
+  }                     
  
   const listaDeContactos = chats.map((chat, index) => {
     return (
@@ -89,7 +88,7 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   const handlerCerrarModalContacto = () => setModalContacto(false);
 
   const agendarContacto = (usuario: string) => {
-    agendarContacto1(usuario);
+    guardarContactoEnBD(usuario);
     handlerCerrarModalContacto();
   }
 

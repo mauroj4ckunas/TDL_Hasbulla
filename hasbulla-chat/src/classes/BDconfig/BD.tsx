@@ -1,3 +1,4 @@
+import { Firestore } from "firebase/firestore";
 import { Chats } from "../Chats";
 import { Mensajes } from "../Mensajes";
 import { Usuarios } from "../Usuarios";
@@ -14,5 +15,6 @@ export interface BD {
     ObtenerTodosLosMensajes(idChat: number): Promise<Mensajes[]>;
     UltimoIdDeChats(): Promise<number>;
     EscucharMensajes(idChat: number): Promise<void>;
+    getBD(): Firestore;
 }
 
