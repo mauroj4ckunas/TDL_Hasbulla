@@ -20,8 +20,6 @@ interface Props {
 
 export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
 
-  let chats: Chats[] = useObtenerTodosLosChats(usuarioLogueado.username, bd)
-
   const contactoInicial = {
     username: "",
     nombre: "",
@@ -38,6 +36,15 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   const [chatSeleccionado, setChatSeleccionado] = useState<Chats>(chatInicial)
   const [contacto, setContacto] = useState<Usuarios>(contactoInicial);
   const [chatAbierto, setChatAbierto] = useState<boolean>(false);
+  const [listaDeChats, setListaDeChats] = useState<Chats[]>([]);
+
+  useEffect(() => {
+    bd.ObtenerTodosLosChats(usuarioLogueado.username)
+      .then(chats => {
+        setListaDeChats(chats);
+      })
+      .catch(error => alert("Fallo al cargar los chats del usuario."))
+  }, []);
 
   useEffect(() => {
     if (contacto !== contactoInicial) {
@@ -60,24 +67,25 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
     setChatSeleccionado(chatElegido)
     setChatAbierto(true);
   }
+
   const guardarContactoEnBD = (contacto: string) => {
     bd.ObtenerUsuario(contacto).then(usuario => {
       if (usuario){
-        bd.UltimoIdDeChats().then(idChats => bd.CrearChat(idChats + 1,usuarioLogueado.username,contacto))
+        bd.UltimoIdDeChats().then(idChats => {
+          bd.CrearChat(idChats + 1,usuarioLogueado.username,contacto)
+          setListaDeChats([...listaDeChats, 
+          {
+            idChat: idChats + 1,
+            usuarioParticipante1: usuarioLogueado.username,
+            usuarioParticipante2: contacto,
+          }]);
+        })
       } else {
         alert("Error al agendar usuario")
       }
     } 
     )
-  }                     
- 
-  const listaDeContactos = chats.map((chat, index) => {
-    return (
-      <li className="gap-x-6 py-3" key={index}>
-        <ContactoChat chat={chat} bd={bd} usuarioLogueado={usuarioLogueado} seleccionarChat={seleccionarChat} />
-      </li>
-    );
-  });
+  }
 
   const [modalContacto, setModalContacto] = useState<boolean>(false);
 
@@ -113,7 +121,15 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
           <div className="h-screen">
               <TituloChats modalAgregarUsuario={handlerAbrirModalContacto} modalCierreSesion={handlerAbrirModalCerrarSesion}/>
               <ul className="">
-                {listaDeContactos}
+                {
+                  listaDeChats.length > 0 && listaDeChats.map((chat, index) => {
+                    return (
+                      <li className="gap-x-6 py-3" key={index}>
+                        <ContactoChat chat={chat} bd={bd} usuarioLogueado={usuarioLogueado} seleccionarChat={seleccionarChat} />
+                      </li>
+                    );
+                  })
+                }
               </ul>
           </div> 
       </section>

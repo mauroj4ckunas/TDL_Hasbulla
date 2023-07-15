@@ -73,8 +73,8 @@ export class FirebaseBD implements BD {
         })
         await setDoc(docNuevoChat, {
             idChat: idChat,
-            usuarioLogueado: usuarioLogueado,
-            usuarioParticipe: usuarioParticipe,
+            usuarioParticipante1: usuarioLogueado,
+            usuarioParticipante2: usuarioParticipe,
         })
     }
     public async GuardarMensaje(idChat: number, mensaje: Mensajes): Promise<void> {
@@ -162,23 +162,6 @@ export class FirebaseBD implements BD {
         return await getDocs(this.chatCollection)
                     .then((response) => response.docs.length)
                     .catch((error) => 0);
-    }
-
-    public async EscucharMensajes(idChat: number) {
-        let ultimoMensaje: Unsubscribe ;
-        let msj: Mensajes;
-        ultimoMensaje = await onSnapshot(collection(doc(this.db, "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
-            let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
-            msj = {
-                idMensaje: response.idMensaje,
-                texto: response.texto,
-                usuarioEmisor: response.usuarioEmisor,
-                usuarioReceptor: response.usuarioReceptor,
-                fechaDeEnvio: response.fechaDeEnvio,
-                imagen: response.imagen,
-                coordenadas: response.coordenadas,
-            }
-        });
     }
 
     public getBD() {return this.db;}
