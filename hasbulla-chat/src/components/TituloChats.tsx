@@ -1,7 +1,5 @@
-import React, { useState } from "react";
 import { faPlus, faUser, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import AgregarContacto from "./AgregarContacto";
 import { SpeedDial, SpeedDialAction } from "@mui/material";
 
 interface Props {

@@ -86,8 +86,12 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   const handlerCerrarModalContacto = () => setModalContacto(false);
 
   const agendarContacto = (usuario: string) => {
-    guardarContactoEnBD(usuario);
-    handlerCerrarModalContacto();
+    if(usuario){
+      guardarContactoEnBD(usuario);
+      handlerCerrarModalContacto();
+      return;
+    }
+    alert("Debe proporcionar un nombre de usuario.")
   }
 
   const [modalCierreSesion, setModalCierreSesion] = useState<boolean>(false);
