@@ -13,8 +13,8 @@ interface Props {
 
 export default function ContactoChat({chat, bd, usuarioLogueado, seleccionarChat}: Props){
     
-    const ultimoMensaje = useObtenerUltimoMensaje(chat.idChat, bd);
     const usernameContacto = chat.usuarioParticipante1 === usuarioLogueado.username ? chat.usuarioParticipante2 : chat.usuarioParticipante1;
+    const ultimoMensaje = useObtenerUltimoMensaje(chat.idChat, bd);
     const c: Usuarios | null = useObtenerUsuario(usernameContacto, bd);
     const contacto: Usuarios = c !== null ? c : {nombre: "No se encontro al contacto", username: "", contrasena: ""}
     

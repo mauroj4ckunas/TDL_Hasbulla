@@ -108,7 +108,7 @@ export const useObtenerTodosLosMensajes = (idChat: number, db: BD): Mensajes[] =
 
 export const useObtenerUltimoMensaje = (idChat: number, db: BD): Mensajes => {
     const [mensaje, setMensaje] = useState<Mensajes>({
-        idMensaje: -1,
+        idMensaje: 0,
         texto: "",
         usuarioEmisor: "",
         usuarioReceptor: "",

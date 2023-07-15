@@ -61,14 +61,14 @@ export class FirebaseBD implements BD {
     public async CrearChat(idChat: number, usuarioLogueado: string, usuarioParticipe: string): Promise<void> {
         const docNuevoChat = doc(this.chatCollection, idChat.toString());
         const mensajesCollection = collection(docNuevoChat, 'Mensajes');
-        const mensajesDoc = doc(mensajesCollection, '-1');
+        const mensajesDoc = doc(mensajesCollection, '0');
         await setDoc(mensajesDoc, {
-            idMensaje: -1,
+            idMensaje: 0,
             texto: '',
             usuarioEmisor: '',
             usuarioReceptor: '',
             imagen: '',
-            coordenadas: '',
+            coordenadas: [],
             fechaDeEnvio: '',
         })
         await setDoc(docNuevoChat, {

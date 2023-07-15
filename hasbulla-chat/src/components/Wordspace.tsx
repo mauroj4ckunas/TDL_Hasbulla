@@ -6,13 +6,11 @@ import TituloChats from './TituloChats';
 import ContactoChat from './ContactoChat';
 import { Usuarios } from '../classes/Usuarios';
 import { Chats } from '../classes/Chats';
-import { useObtenerTodosLosChats, useUltimoIdDeChats } from '../classes/HooksFetch';
-import { FirebaseBD } from '../classes/BDconfig/FirebaseBD';
+import { useObtenerTodosLosChats } from '../classes/HooksFetch';
 import NingunChatAbierto from './NingunChatAbierto';
 import AgregarContacto from './AgregarContacto';
 import CerrarSesion from './CerrarSesion';
 import { BD } from '../classes/BDconfig/BD';
-import { updateLiteralTypeNode } from 'typescript';
 
 interface Props {
   usuarioLogueado: Usuarios,

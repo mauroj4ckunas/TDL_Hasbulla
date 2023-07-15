@@ -162,6 +162,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     const enviarImagen = (base64: string) => {
         handlerCerrarModalImagen()
         setBase64(base64);
+        setTexto('');
         setCoordenadas([]);
     }
 
@@ -178,6 +179,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
         handlerCerrarModalUbicacion();
         setCoordenadas(coordenadas);
         setBase64('');
+        setTexto('');
     }
 
     const handlerCancelarEleccion = () => {
@@ -191,7 +193,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
             <div ref={divRepoMensajesRef} className='w-full h-full flex justify-center overflow-y-auto scroll_chat'>
                 <div className='my-2 w-3/5 flex flex-col space-y-2 text-black text-left' >
                     {mensajesMostrados.map((msj, index) => {
-                        return msj.usuarioEmisor === usuarioLogueado.username ? <MensajeEnviado key={index} mensaje={msj} /> : <MensajeRecibido key={index} mensaje={msj} />
+                        return msj.usuarioEmisor === usuarioLogueado.username  ? <MensajeEnviado key={index} mensaje={msj} /> : <MensajeRecibido key={index} mensaje={msj} />
                     })}
                 </div>
             </div>
