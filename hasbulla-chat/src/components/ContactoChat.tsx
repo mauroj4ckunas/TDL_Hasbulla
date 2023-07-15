@@ -23,10 +23,10 @@ export default function ContactoChat({chat, bd, usuarioLogueado, seleccionarChat
             <div className='flex flex-col mx-5 px-3  py-2 hover:bg-gray-500 rounded-md cursor-pointer' onClick={() => seleccionarChat(contacto, chat)}>
                 <div className='flex justify-between'>
                     <p className="text-sm font-semibold leading-6 text-gray-100 max-w-full">{contacto.nombre}</p>
-                    <p className='text-sm italic text-gray-400'>{ultimoMensaje.fechaDeEnvio}</p>
+                    <p className='text-sm italic text-gray-400'>{ultimoMensaje && ultimoMensaje.fechaDeEnvio}</p>
                 </div>
                 <p className="mt-1 text-sm text-gray-400 truncate hover:text-clip">
-                    {ultimoMensaje.texto}
+                    {ultimoMensaje && ultimoMensaje.texto}
                 </p>
             </div>
         </>
