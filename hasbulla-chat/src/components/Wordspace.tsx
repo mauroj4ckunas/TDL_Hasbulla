@@ -43,22 +43,26 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   useEffect(() => {
     bd.ObtenerTodosLosChats(usuarioLogueado.username)
       .then(chats => {
+        console.log(chats)
         setListaDeChats(chats);
-        escucharMensajes();
+        escucharNuevosChats();
       })
       .catch(error => alert("Fallo al cargar los chats del usuario."))
   }, []);
 
-  const escucharMensajes = async () => {
+  const escucharNuevosChats = async () => {
+    console.log("Entra a la funcion")
     await onSnapshot(collection(bd.getBD(), 'Chats'), (querySnapshot) => {
       if (querySnapshot.docs.length > 0) {
-        let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
+        let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idChat) - parseInt(b.data().idChat))[querySnapshot.docs.length-1].data()
         if(response.usuarioParticipante2 === usuarioLogueado.username){
+            
             const nuevoChat: Chats = {
-              idChat: response.idChats + 1,
+              idChat: response.idChat + 1,
               usuarioParticipante1: response.usuarioParticipante1,
               usuarioParticipante2: response.usuarioParticipante2,
             }
+            console.log(nuevoChat)
             setListaDeChats([...listaDeChats, nuevoChat]);
         }
       }
@@ -90,11 +94,11 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   const guardarContactoEnBD = (contacto: string) => {
     bd.ObtenerUsuario(contacto).then(usuario => {
       if (usuario){
-        bd.UltimoIdDeChats().then(idChats => {
-          bd.CrearChat(idChats + 1,usuarioLogueado.username,contacto)
+        bd.UltimoIdDeChats().then(idChat => {
+          bd.CrearChat(idChat + 1,usuarioLogueado.username,contacto)
           setListaDeChats([...listaDeChats, 
           {
-            idChat: idChats + 1,
+            idChat: idChat + 1,
             usuarioParticipante1: usuarioLogueado.username,
             usuarioParticipante2: contacto,
           }]);

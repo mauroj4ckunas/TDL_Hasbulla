@@ -59,6 +59,7 @@ export class FirebaseBD implements BD {
     }
 
     public async CrearChat(idChat: number, usuarioLogueado: string, usuarioParticipe: string): Promise<void> {
+        console.log(idChat)
         const docNuevoChat = doc(this.chatCollection, idChat.toString());
         const mensajesCollection = collection(docNuevoChat, 'Mensajes');
         const mensajesDoc = doc(mensajesCollection, '0');
