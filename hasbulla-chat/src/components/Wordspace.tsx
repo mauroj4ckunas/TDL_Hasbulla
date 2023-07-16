@@ -43,11 +43,10 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   useEffect(() => {
     bd.ObtenerTodosLosChats(usuarioLogueado.username)
       .then(chats => {
-        console.log(chats)
         setListaDeChats(chats);
-        escucharNuevosChats();
       })
       .catch(error => alert("Fallo al cargar los chats del usuario."))
+    escucharNuevosChats();
   }, []);
 
   const escucharNuevosChats = async () => {
@@ -61,7 +60,12 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
               usuarioParticipante1: response.usuarioParticipante1,
               usuarioParticipante2: response.usuarioParticipante2,
             }
+            console.log("--------------")
+            console.log("response.usuarioParticipante1: ", response.usuarioParticipante1)
+            console.log("response.usuarioParticipante2: ", response.usuarioParticipante2)
+            console.log(listaDeChats)
             console.log(nuevoChat)
+            console.log("--------------")
             setListaDeChats([...listaDeChats, nuevoChat]);
         }
       }
@@ -84,7 +88,12 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
     setChatAbierto(chatAbierto);
   }, [chatAbierto]);
 
+  useEffect(() => {
+    setListaDeChats(listaDeChats);
+  }, [listaDeChats]);
+
   const seleccionarChat = (contactoElegido: Usuarios, chatElegido: Chats): void => {
+    console.log("El chat elegido es: ", chatElegido)
     setContacto(contactoElegido)
     setChatSeleccionado(chatElegido)
     setChatAbierto(true);

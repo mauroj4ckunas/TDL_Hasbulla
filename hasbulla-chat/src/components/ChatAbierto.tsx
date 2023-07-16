@@ -67,6 +67,9 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
                     coordenadas: response.coordenadas,
                     imagen: response.imagen,
                 }
+
+                console.log("el mensjae recibido es: ", msjRecibido);
+
                 setMensajeRecibido(msjRecibido);
             }
         });
@@ -140,6 +143,17 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
                 idMensaje: idMensajes + 1,
             }));
             setIdMensajes(idMensajes + 1)
+
+            console.log("el mensaje enviado es: ", {
+                usuarioEmisor: usuarioLogueado.username,
+                usuarioReceptor: contacto.username,
+                texto: texto,
+                fechaDeEnvio: getFechaActual(),
+                imagen: base64,
+                coordenadas: coordenadas,
+                idMensaje: idMensajes + 1,
+            });
+
         }
         if (inputTextRef.current != null) {
             inputTextRef.current.value = "";
