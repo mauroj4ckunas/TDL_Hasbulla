@@ -51,14 +51,13 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   }, []);
 
   const escucharNuevosChats = async () => {
-    console.log("Entra a la funcion")
     await onSnapshot(collection(bd.getBD(), 'Chats'), (querySnapshot) => {
       if (querySnapshot.docs.length > 0) {
         let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idChat) - parseInt(b.data().idChat))[querySnapshot.docs.length-1].data()
+        
         if(response.usuarioParticipante2 === usuarioLogueado.username){
-            
             const nuevoChat: Chats = {
-              idChat: response.idChat + 1,
+              idChat: response.idChat,
               usuarioParticipante1: response.usuarioParticipante1,
               usuarioParticipante2: response.usuarioParticipante2,
             }
@@ -67,7 +66,7 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
         }
       }
     });
-}
+  }
 
   useEffect(() => {
     if (contacto !== contactoInicial) {
