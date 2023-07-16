@@ -48,8 +48,8 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
             setMensajesMostrados(ordenarPorId(resp));
             setIdMensajes(resp.length);
         };
-        escucharMensajes(chat.idChat)
         getFetch();
+        escucharMensajes(chat.idChat)
     }, [chat]);
 
 
