@@ -63,12 +63,6 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
               usuarioParticipante1: response.usuarioParticipante1,
               usuarioParticipante2: response.usuarioParticipante2,
             }
-            console.log("--------------")
-            console.log("response.usuarioParticipante1: ", response.usuarioParticipante1)
-            console.log("response.usuarioParticipante2: ", response.usuarioParticipante2)
-            console.log(listaDeChats)
-            console.log(nuevoChat)
-            console.log("--------------")
             setListaDeChats((prevListaDeChats) => [...prevListaDeChats, nuevoChat]);
         }
       }
@@ -96,7 +90,6 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
   }, [listaDeChats]);
 
   const seleccionarChat = (contactoElegido: Usuarios, chatElegido: Chats): void => {
-    console.log("El chat elegido es: ", chatElegido)
     setContacto(contactoElegido)
     setChatSeleccionado(chatElegido)
     setChatAbierto(true);
@@ -169,7 +162,7 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
       </section>
       <section id="chat-abierto" className="bg-gray-900 w-full md:3-3/4" style={{ backgroundImage: `url(${fondo})` }}>
         { 
-        chatAbierto 
+          chatAbierto 
           ?
           <ChatAbierto chat={chatSeleccionado} usuarioLogueado={usuarioLogueado} contacto={contacto} bd={bd} />
           :

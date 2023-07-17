@@ -58,9 +58,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     const escucharMensajes = async (idChat: number) => {
         await onSnapshot(collection(doc(bd.getBD(), "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
             let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
-            console.log(response.idMensaje)
             if(response.usuarioReceptor === usuarioLogueado.username){
-                console.log(response.idMensaje)
                 setIdMensajes(response.idMensaje);
                 const msjRecibido: Mensajes = {
                     idMensaje: response.idMensaje,
@@ -137,15 +135,16 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
 
     const enviarMensaje = () => {
         if (texto !== '' || (texto === '' && base64) || (texto === '' && coordenadas)) {
-            
-            setMensaje((prevMensaje) => ({
-                ...prevMensaje,
+
+            setMensaje({
+                usuarioEmisor: usuarioLogueado.username,
+                usuarioReceptor: contacto.username,
                 texto: texto,
                 fechaDeEnvio: getFechaActual(),
                 imagen: base64,
                 coordenadas: coordenadas,
                 idMensaje: idMensajes + 1,
-            }));
+            });
             setIdMensajes(idMensajes + 1)
 
             console.log("el mensaje enviado es: ", {
