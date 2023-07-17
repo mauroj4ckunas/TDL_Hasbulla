@@ -140,6 +140,7 @@ export class FirebaseBD implements BD {
                 imagen: msj.data().imagen,
                 coordenadas: msj.data().coordenadas,
                 fechaDeEnvio: msj.data().fechaDeEnvio,
+                reaccion: 0,
             });
         });
         return mensajes;

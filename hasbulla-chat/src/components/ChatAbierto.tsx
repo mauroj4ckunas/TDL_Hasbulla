@@ -37,6 +37,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
         imagen: "",
         coordenadas: [],
         fechaDeEnvio: "",
+        reaccion: 0
     }
 
     const [mensaje, setMensaje] = useState<Mensajes>(mensajeInicial);
@@ -68,6 +69,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
                     fechaDeEnvio: response.fechaDeEnvio,
                     coordenadas: response.coordenadas,
                     imagen: response.imagen,
+                    reaccion: 0,
                 }
 
                 setMensajeRecibido(msjRecibido);
@@ -142,6 +144,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
                 imagen: base64,
                 coordenadas: coordenadas,
                 idMensaje: idMensajes + 1,
+                reaccion: 0,
             });
             setIdMensajes(idMensajes + 1)
 

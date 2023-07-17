@@ -114,6 +114,7 @@ export const useObtenerUltimoMensaje = (idChat: number, db: BD): Mensajes => {
         usuarioReceptor: "",
         imagen: "",
         coordenadas: [],
+        reaccion: 0
     })
     useEffect(() => {
         const getFetch = async () => {

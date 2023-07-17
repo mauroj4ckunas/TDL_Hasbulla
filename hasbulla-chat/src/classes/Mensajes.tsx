@@ -1,3 +1,5 @@
+type Reaccion = 0 | 1 | 2;
+
 export type Mensajes = {
     idMensaje: number;
     texto: string,
@@ -6,4 +8,5 @@ export type Mensajes = {
     imagen: string,
     coordenadas: number[],
     fechaDeEnvio?: string,
+    reaccion: Reaccion,
 }
