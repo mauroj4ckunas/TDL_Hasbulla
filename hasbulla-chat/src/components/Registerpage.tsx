@@ -25,6 +25,12 @@ export default function RegisterPage({register}: Props){
         }
     }
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            registrar();
+        }
+    }
+
     return(    
        <div className="formulario">
         <h1>Registrate</h1>
@@ -41,7 +47,7 @@ export default function RegisterPage({register}: Props){
             
             <div className="input-contenedor">
                 <i className="icon"><FontAwesomeIcon icon={faLock}/></i>
-                <input ref={contrasena} className="sinBorde" type="password" placeholder="Contraseña" />
+                <input ref={contrasena} className="sinBorde" type="password" placeholder="Contraseña" onKeyDown={handleKeyDown}/>
             </div>
 
             <button value="Registrate" className="button" onClick={registrar}>Registrar nuevo Usuario</button>

@@ -22,6 +22,12 @@ export default function LoginPage({login}: Props){
         }
     }
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+            logear();
+        }
+    }
+
     return(
         <div className="formulario">
         <h1>Iniciar Sesión</h1>
@@ -33,7 +39,7 @@ export default function LoginPage({login}: Props){
             
             <div className="input-contenedor">
                 <i className="icon"> <FontAwesomeIcon icon={faLock}/></i>
-                <input ref={contrasena} className="sinBorde" type="password" placeholder="Contraseña" />
+                <input ref={contrasena} className="sinBorde" type="password" placeholder="Contraseña" onKeyDown={handleKeyDown}/>
             </div>
 
             <button type="submit" className="button" onClick={() => {logear()}}>Iniciar sesion</button>

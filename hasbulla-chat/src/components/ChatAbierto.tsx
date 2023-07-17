@@ -70,8 +70,6 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
                     imagen: response.imagen,
                 }
 
-                console.log("el mensjae recibido es: ", msjRecibido);
-
                 setMensajeRecibido(msjRecibido);
             }
         });
@@ -147,16 +145,6 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
             });
             setIdMensajes(idMensajes + 1)
 
-            console.log("el mensaje enviado es: ", {
-                usuarioEmisor: usuarioLogueado.username,
-                usuarioReceptor: contacto.username,
-                texto: texto,
-                fechaDeEnvio: getFechaActual(),
-                imagen: base64,
-                coordenadas: coordenadas,
-                idMensaje: idMensajes + 1,
-            });
-
         }
         if (inputTextRef.current != null) {
             inputTextRef.current.value = "";
@@ -203,6 +191,12 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
         setCoordenadas([]);
     }
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === "Enter") {
+          enviarMensaje();
+        }
+      }
+
     return (
         <div className='h-screen w-full relative flex flex-col'>
             <NombreDeChat contacto={contacto.nombre} />
@@ -248,6 +242,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
                         className="my-5 px-4 py-3 w-2/3 rounded-full
                         bg-gray-900 text-white"
                         onChange={getValorInput}
+                        onKeyDown={handleKeyDown}
                     >
                     </input>
                     <button id="enviar" className="my-5 ml-2 px-4 rounded-full
