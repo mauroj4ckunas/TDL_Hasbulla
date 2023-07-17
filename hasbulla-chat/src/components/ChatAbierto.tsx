@@ -47,16 +47,18 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
             const resp = await bd.ObtenerTodosLosMensajes(chat.idChat);
             setMensajesMostrados(ordenarPorId(resp));
             setIdMensajes(resp.length);
+            escucharMensajes(chat.idChat)
         };
         getFetch();
-        escucharMensajes(chat.idChat)
     }, [chat]);
 
 
     const escucharMensajes = async (idChat: number) => {
         await onSnapshot(collection(doc(bd.getBD(), "Chats", idChat.toString()), "Mensajes"), (querySnapshot) => {
             let response = querySnapshot.docs.sort((a, b) => parseInt(a.data().idMensaje) - parseInt(b.data().idMensaje))[querySnapshot.docs.length-1].data()
+            console.log(response.idMensaje)
             if(response.usuarioReceptor === usuarioLogueado.username){
+                console.log(response.idMensaje)
                 setIdMensajes(response.idMensaje);
                 const msjRecibido: Mensajes = {
                     idMensaje: response.idMensaje,
