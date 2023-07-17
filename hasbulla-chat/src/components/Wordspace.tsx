@@ -69,7 +69,7 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
             console.log(listaDeChats)
             console.log(nuevoChat)
             console.log("--------------")
-            setListaDeChats([...listaDeChats, nuevoChat]);
+            setListaDeChats((prevListaDeChats) => [...prevListaDeChats, nuevoChat]);
         }
       }
     });
