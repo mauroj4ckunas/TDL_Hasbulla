@@ -111,6 +111,7 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
     }, [mensaje]);
 
     useEffect(() => {
+        setMensajeRecibido(mensajeRecibido);
         agregarComponenteMensajeRecibido();
     }, [mensajeRecibido]);
 
