@@ -41,11 +41,14 @@ export default function Wordspace({usuarioLogueado, bd, desloguear}: Props) {
 
   
   useEffect(() => {
-    bd.ObtenerTodosLosChats(usuarioLogueado.username)
-      .then(chats => {
-        setListaDeChats(chats);
-      })
-      .catch(error => alert("Fallo al cargar los chats del usuario."))
+    const getFetch = async () => {
+      await bd.ObtenerTodosLosChats(usuarioLogueado.username)
+        .then(chats => {
+          setListaDeChats(chats);
+        })
+        .catch(error => alert("Fallo al cargar los chats del usuario."));
+    };
+    getFetch();
     escucharNuevosChats();
   }, []);
 
