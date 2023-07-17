@@ -44,9 +44,11 @@ export default function ChatAbierto({ chat, usuarioLogueado, contacto, bd }: Pro
 
     useEffect(() => {
         const getFetch = async () => {
-            const resp = await bd.ObtenerTodosLosMensajes(chat.idChat);
-            setMensajesMostrados(ordenarPorId(resp));
-            setIdMensajes(resp.length);
+            bd.ObtenerTodosLosMensajes(chat.idChat)
+                .then(resp  => {
+                    setMensajesMostrados(ordenarPorId(resp))
+                    setIdMensajes(resp.length);
+                });
             escucharMensajes(chat.idChat)
         };
         getFetch();
